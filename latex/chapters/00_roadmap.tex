@@ -1,0 +1,138 @@
+\chapter{How to use this tutorial}
+\label{ch:roadmap}
+
+\section{What this document is for}
+
+The ASEC Lab onboarding chapter \emph{Reactive Flows in Cantera} starts from the fully reactive
+Navier--Stokes equations and then, very sensibly, refuses to solve them in three dimensions
+straight away. Instead it climbs a ladder:
+\begin{center}
+0D (homogeneous reactor) $\;\longrightarrow\;$ 1D (laminar flames) $\;\longrightarrow\;$ 3D (turbulent reacting flow).
+\end{center}
+The onboarding project then asks you to work through hydrogen/air combustion in three parts:
+\begin{enumerate}[label=\textbf{Part \arabic*:}]
+  \item \textbf{Equilibrium} --- the thermodynamic end state (adiabatic flame temperature) as a function
+        of equivalence ratio $\phi$, preheat temperature $T_u$ and pressure $p$.
+  \item \textbf{Non-premixed flames} --- counterflow diffusion flames, mixture fraction $Z$, scalar
+        dissipation rate $\chi$, departure from equilibrium and extinction.
+  \item \textbf{Premixed flames} --- freely propagating flames, flame speed $S_L$, thickness
+        $\delta_L$, transport models (unity Lewis vs.\ mixture-averaged).
+\end{enumerate}
+
+This tutorial assumes \textbf{nothing} beyond school-level calculus. Every equation that appears in
+the project is derived here, every derivation is followed by an \emph{intuition} box that says
+what the mathematics means physically, and wherever a picture helps there is a schematic or a
+plot computed with Cantera. The data figures were generated with
+\code{latex/figures/scripts/make\_figures.py}; you can (and should) re-run and modify that script.
+
+\begin{warning}[the demonstrations are not the project]
+To keep the project yours, the worked numerical examples use \textbf{methane}/air or conditions
+that differ from the project tasks. The physics, methods and code patterns transfer directly to
+hydrogen; the numbers do not. When a \emph{Project link} box gives a hint, it tells you what to
+look for and why, not the answer.
+\end{warning}
+
+\section{The ladder of complexity}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=6mm and 10mm]
+  % 0D
+  \node[draw,thick,minimum width=2.6cm,minimum height=2.6cm,fill=hot!10] (r0) {};
+  \foreach \i in {1,...,22} {\fill[hot!70] ($(r0.south west)+(0.2+2.2*rnd,0.2+2.2*rnd)$) circle (1.2pt);}
+  \node[below=2mm of r0,align=center,font=\small] (l0) {\textbf{0D reactor}\\$Y_k(t),\,T(t)$\\chemistry + thermo};
+  % 1D
+  \node[draw,thick,minimum width=4.2cm,minimum height=2.6cm,right=12mm of r0,
+        left color=cold!10,right color=hot!25] (r1) {};
+  \draw[very thick,hot] ($(r1.north)+(-0.2,0)$) -- ($(r1.south)+(-0.2,0)$);
+  \draw[flow] ($(r1.west)+(0.1,0.6)$) -- ++(1.0,0);
+  \draw[flow] ($(r1.west)+(0.1,-0.6)$) -- ++(1.0,0);
+  \node[font=\scriptsize] at ($(r1.west)+(0.65,0)$) {fresh};
+  \node[font=\scriptsize] at ($(r1.east)+(-0.7,0)$) {burnt};
+  \node[below=2mm of r1,align=center,font=\small] {\textbf{1D flame}\\$Y_k(x),\,T(x),\,u(x)$\\+ convection, diffusion};
+  % 3D
+  \node[draw,thick,minimum width=4.2cm,minimum height=2.6cm,right=12mm of r1,fill=gray!5] (r3) {};
+  \draw[very thick,hot,decorate,decoration={snake,amplitude=2.5mm,segment length=6mm}]
+    ($(r3.south west)+(0.4,0.3)$) .. controls +(1,2) and +(-1,-1.5) .. ($(r3.north east)+(-0.4,-0.3)$);
+  \draw[cold,->,thick] ($(r3.center)+(-1.2,0.6)$) arc (180:-90:3mm);
+  \draw[cold,->,thick] ($(r3.center)+(0.9,-0.6)$) arc (0:270:2.5mm);
+  \node[below=2mm of r3,align=center,font=\small] {\textbf{3D turbulent flame}\\$Y_k(\vx,t),\,T,\,\vu,\,p$\\+ turbulence, geometry};
+  \draw[->,ultra thick,gray] (r0.east) -- (r1.west);
+  \draw[->,ultra thick,gray] (r1.east) -- (r3.west);
+\end{tikzpicture}
+\caption{Each rung adds one physical ingredient. Chemistry and thermodynamics do not depend on
+the spatial dimension, so they are learnt first in 0D and reused unchanged in 1D and 3D.}
+\label{fig:ladder}
+\end{figure}
+
+The reason this ladder works is that the \emph{chemical source term} and the
+\emph{thermodynamic properties} are local: at a point in space they depend only on the local
+temperature, pressure and composition, never on gradients. Whatever you learn about them in a
+perfectly mixed box (0D) remains true inside a flame (1D) or a jet engine (3D).
+
+\section{Map of the chapters}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=5mm and 6mm, every node/.style={boxnode,text width=3.2cm}]
+  \node[fill=gray!10] (m) {Ch.\,\ref{ch:math}\\Math toolkit};
+  \node[right=of m,fill=keyc!10] (t) {Ch.\,\ref{ch:thermo}\\Thermodynamics};
+  \node[right=of t,fill=keyc!10] (e) {Ch.\,\ref{ch:equilibrium}\\Equilibrium, $\Tad$};
+  \node[below=of t,fill=hot!10] (k) {Ch.\,\ref{ch:kinetics}\\Kinetics};
+  \node[right=of k,fill=hot!10] (r) {Ch.\,\ref{ch:reactor}\\0D reactor};
+  \node[below=of m,fill=cold!10] (tr) {Ch.\,\ref{ch:transport}\\Transport};
+  \node[below=of k,fill=derv!10] (g) {Ch.\,\ref{ch:governing}\\Reacting N--S};
+  \node[below left=of g,fill=intu!10,xshift=12mm] (pf) {Ch.\,\ref{ch:premixed}\\Premixed flames};
+  \node[below right=of g,fill=intu!10,xshift=-12mm] (nf) {Ch.\,\ref{ch:nonpremixed}\\Non-premixed};
+  \node[below=16mm of g,fill=gray!15] (c) {Ch.\,\ref{ch:cantera} Cantera\\Ch.\,\ref{ch:project} Project};
+  \node[right=of e,fill=proj!15,text width=1.8cm] (p1) {\textbf{Part 1}};
+  \node[right=of nf,fill=proj!15,text width=1.8cm] (p2) {\textbf{Part 2}};
+  \node[left=of pf,fill=proj!15,text width=1.8cm] (p3) {\textbf{Part 3}};
+  \draw[->] (m) -- (t); \draw[->] (t) -- (e); \draw[->] (t) -- (k); \draw[->] (k) -- (r);
+  \draw[->] (m) -- (tr); \draw[->] (tr) -- (g); \draw[->] (k) -- (g);
+  \draw[->] (g) -- (pf); \draw[->] (g) -- (nf); \draw[->] (pf) -- (c); \draw[->] (nf) -- (c);
+  \draw[->,proj,thick] (e) -- (p1); \draw[->,proj,thick] (nf) -- (p2); \draw[->,proj,thick] (pf) -- (p3);
+\end{tikzpicture}
+\caption{Dependencies between chapters and the project parts they prepare you for.}
+\end{figure}
+
+\paragraph{Suggested reading order.}
+\begin{itemize}
+  \item Before Part 1: Chapters \ref{ch:math}--\ref{ch:equilibrium} and Sections
+        \ref{sec:ct-solution}--\ref{sec:ct-equil} of the Cantera chapter.
+  \item Before Part 2: Chapters \ref{ch:kinetics}--\ref{ch:governing} and \ref{ch:nonpremixed}.
+  \item Before Part 3: Chapter \ref{ch:premixed} and the grid-refinement material in
+        \secref{sec:ct-refine}.
+  \item Chapter~\ref{ch:project} is the step-by-step project companion; read the relevant part
+        right before you start coding it.
+\end{itemize}
+
+\section{Conventions}
+
+\begin{itemize}
+  \item SI units throughout. Cantera uses \textbf{kmol} rather than mol, so molar quantities
+        are per kmol and $\Ru = \SI{8314.46}{\joule\per\kilo\mole\per\kelvin}$.
+  \item Species are indexed by $k=1,\dots,K$, reactions by $i=1,\dots,I$ and elements by
+        $j=1,\dots,J$.
+  \item Bold symbols are vectors ($\vu$, $\vx$); $\nabla$ is the gradient operator.
+  \item Subscript $u$ means \emph{unburnt} (fresh) gas, $b$ \emph{burnt} gas, $\mathrm{st}$ stoichiometric,
+        $\mathrm{ad}$ adiabatic.
+  \item A full nomenclature is in Appendix~\ref{app:nomenclature}.
+\end{itemize}
+
+\paragraph{Boxes used in the text.}
+\begin{intuition}
+What the mathematics means, in words and pictures.
+\end{intuition}
+\begin{derivation}
+A step-by-step derivation where no step is skipped.
+\end{derivation}
+\begin{keypoint}
+A result you should remember.
+\end{keypoint}
+\begin{warning}
+A mistake that is easy to make, or a result Cantera will happily give you that is wrong.
+\end{warning}
+\begin{project}
+How the section connects to a specific project task.
+\end{project}

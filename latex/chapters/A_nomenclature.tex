@@ -1,0 +1,75 @@
+\chapter{Nomenclature and data}
+\label{app:nomenclature}
+
+\section*{Latin symbols}
+\begin{tabular}{lll}
+\toprule
+$a$ & strain rate & \si{\per\second}\\
+$A,\beta,E_a$ & Arrhenius pre-factor, temperature exponent, activation energy & --, --, \si{\joule\per\kilo\mole}\\
+$C_k=[X_k]$ & molar concentration & \si{\kilo\mole\per\metre\cubed}\\
+$c_p,c_v$ & specific heat capacities & \si{\joule\per\kilo\gram\per\kelvin}\\
+$D_{km}$, $\mathcal D_{jk}$ & mixture-averaged / binary diffusion coefficient & \si{\metre\squared\per\second}\\
+$g,h,s,u$ & specific Gibbs energy, enthalpy, entropy, internal energy & \si{\joule\per\kilo\gram} (\si{\joule\per\kilo\gram\per\kelvin})\\
+$\vj_k$ & diffusive mass flux of species $k$ & \si{\kilo\gram\per\metre\squared\per\second}\\
+$K_p$, $K_c$ & equilibrium constants (pressure / concentration) & --\\
+$\dot m$ & mass flux & \si{\kilo\gram\per\metre\squared\per\second}\\
+$p$ & pressure & \si{\pascal}\\
+$q_i$ & rate of progress of reaction $i$ & \si{\kilo\mole\per\metre\cubed\per\second}\\
+$\dot q$ & heat release rate & \si{\watt\per\metre\cubed}\\
+$\Ru$ & universal gas constant, 8314.46 & \si{\joule\per\kilo\mole\per\kelvin}\\
+$s$ & stoichiometric oxygen-to-fuel mass ratio (Ch.~\ref{ch:nonpremixed}) & --\\
+$\SL$, $S_c$ & laminar flame speed, consumption speed & \si{\metre\per\second}\\
+$T$ & temperature & \si{\kelvin}\\
+$\vu$, $\vV_k$ & mass-averaged velocity, diffusion velocity & \si{\metre\per\second}\\
+$W_k$, $W$ & molar mass of species $k$, of mixture & \si{\kilo\gram\per\kilo\mole}\\
+$X_k$, $Y_k$ & mole / mass fraction & --\\
+$Z$ & mixture fraction & --\\
+\bottomrule
+\end{tabular}
+
+\section*{Greek symbols}
+\begin{tabular}{lll}
+\toprule
+$\alpha=\lambda/\rho c_p$ & thermal diffusivity & \si{\metre\squared\per\second}\\
+$\delta_L$ & thermal flame thickness & \si{\metre}\\
+$\lambda$ & thermal conductivity & \si{\watt\per\metre\per\kelvin}\\
+$\mu$, $\nu$ & dynamic / kinematic viscosity & \si{\pascal\second}, \si{\metre\squared\per\second}\\
+$\mu_k$ & chemical potential & \si{\joule\per\kilo\mole}\\
+$\nu'_{ki},\nu''_{ki},\nu_{ki}$ & stoichiometric coefficients (reactant, product, net) & --\\
+$\xi$ & extent of reaction & \si{\kilo\mole}\\
+$\rho$ & density & \si{\kilo\gram\per\metre\cubed}\\
+$\phi$ & equivalence ratio & --\\
+$\chi$ & scalar dissipation rate & \si{\per\second}\\
+$\wdot_k$ & net molar production rate & \si{\kilo\mole\per\metre\cubed\per\second}\\
+\bottomrule
+\end{tabular}
+
+\section*{Dimensionless numbers}
+$\mathrm{Re}=UL/\nu$, $\Pr=\nu/\alpha$, $\mathrm{Sc}_k=\nu/D_k$, $\mathrm{Le}_k=\alpha/D_k$,
+$\mathrm{Da}=\tau_{\rm flow}/\tau_{\rm chem}$, $\beta=E(T_b-T_u)/\Ru T_b^2$ (Zeldovich), $\mathrm{Ma}=u/c$.
+
+\section*{Useful data}
+\begin{tabular}{lccccc}
+\toprule
+ & \ce{H_2} & \ce{O_2} & \ce{N_2} & \ce{H_2O} & \ce{CH_4}\\
+\midrule
+$W$ [kg/kmol] & 2.016 & 32.00 & 28.01 & 18.02 & 16.04\\
+$\Delta\hat h_f^\circ$ [MJ/kmol] & 0 & 0 & 0 & $-241.8$ & $-74.9$\\
+$c_p$ at 300 K [kJ/kg/K] & 14.3 & 0.92 & 1.04 & 1.86 & 2.23\\
+\bottomrule
+\end{tabular}
+
+Stoichiometric values in air (\ce{O_2}:\ce{N_2} = 1:3.76): \ce{CH_4}: $s=4$, $\Zst=0.055$,
+$\Tad=\SI{2226}{\kelvin}$, $\SL\approx\SI{0.38}{\metre\per\second}$.
+
+\section*{Further reading}
+\begin{itemize}
+  \item S.~R.~Turns, \emph{An Introduction to Combustion}, McGraw-Hill: the gentlest complete textbook.
+  \item T.~Poinsot \& D.~Veynante, \emph{Theoretical and Numerical Combustion}: the governing equations,
+        flame speeds and flamelets, for the CFD-minded.
+  \item N.~Peters, \emph{Turbulent Combustion}, CUP: mixture fraction and flamelets.
+  \item C.~K.~Law, \emph{Combustion Physics}, CUP: stretch, Lewis-number effects, hydrogen.
+  \item ANSYS Chemkin Theory Manual: exact forms of every property and rate expression.
+  \item Cantera documentation and examples: \url{https://cantera.org}.
+  \item ASEC onboarding: \url{https://asec-laboratory.github.io/Onboarding/04_ReactiveFlows_and_Cantera/00_Introduction/}.
+\end{itemize}

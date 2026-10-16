@@ -1,0 +1,123 @@
+\chapter{The reacting Navier--Stokes equations}
+\label{ch:governing}
+
+The onboarding introduction lists four conservation laws. Here each one is built from the generic
+balance \eqref{eq:generic}, so you can see where every term comes from. We then simplify them
+for the low-speed flames Cantera solves.
+
+\section{Mass}
+
+With $\varphi=1$, no diffusion of total mass and no source:
+\begin{equation}
+  \pd{\rho}{t}+\divg(\rho\vu)=0 .
+  \label{eq:mass}
+\end{equation}
+
+\section{Species}
+
+With $\varphi=Y_k$, diffusive flux $\vj_k=\rho Y_k\vV_k$ and chemical source $W_k\wdot_k$:
+\begin{equation}
+  \pd{(\rho Y_k)}{t}+\divg(\rho\vu Y_k)=-\divg(\rho Y_k\vV_k)+W_k\wdot_k,\qquad k=1\dots K.
+  \label{eq:species}
+\end{equation}
+Summing over all $k$, and using $\sum Y_k=1$, $\sum\rho Y_k\vV_k=0$ and $\sum W_k\wdot_k=0$, gives back
+\eqref{eq:mass}. So only $K-1$ species equations are independent. Cantera solves all $K$ and
+enforces the constraints numerically.
+
+\begin{intuition}
+Each species is a dye that is carried by the flow, smeared by diffusion at its own rate, and
+created or destroyed by chemistry. The equations are coupled only through $\wdot_k(T,\bm Y)$ and
+through the flow. With 10 species (\code{h2o2.yaml}) that is 10 equations; with GRI-Mech 3.0, 53.
+\end{intuition}
+
+\section{Momentum}
+
+\begin{derivation}[Newton's second law for a control volume]
+Momentum per unit volume is $\rho\vu$. The forces are pressure on the surface ($-p\vn\,\dd S$),
+viscous stress on the surface ($\bm\tau\cdot\vn\,\dd S$) and gravity in the volume ($\rho\bm g\,\dd V$).
+The generic law with $\varphi=\vu$ and Gauss's theorem gives
+\begin{equation}
+  \pd{(\rho\vu)}{t}+\divg(\rho\vu\vu)=-\nabla p+\divg\bm\tau+\rho\bm g ,
+  \label{eq:momentum}
+\end{equation}
+with $\bm\tau$ the Newtonian stress of \chapref{ch:transport}.
+\end{derivation}
+
+\section{Energy}
+
+\begin{derivation}[from total energy to temperature]
+\textbf{Step 1: total energy} $e_t=u+\tfrac12|\vu|^2$. Its sources are heat conduction $-\divg\vq$,
+work by pressure $-\divg(p\vu)$, work by viscous stresses $\divg(\bm\tau\cdot\vu)$ and gravity
+$\rho\bm g\cdot\vu$:
+\[
+\rho\Dt{e_t}=-\divg\vq-\divg(p\vu)+\divg(\bm\tau\cdot\vu)+\rho\bm g\cdot\vu .
+\]
+\textbf{Step 2: remove kinetic energy.} Dot \eqref{eq:momentum} with $\vu$ to get
+$\rho\,\mathrm D(\tfrac12|\vu|^2)/\mathrm Dt=-\vu\cdot\nabla p+\vu\cdot(\divg\bm\tau)+\rho\bm g\cdot\vu$ and subtract.
+Using $h=u+p/\rho$ and mass conservation,
+\begin{equation}
+  \rho\Dt{h}=\Dt{p}-\divg\vq+\bm\tau:\nabla\vu .
+  \label{eq:enthalpy}
+\end{equation}
+\textbf{Step 3: temperature.} With $h=\sum Y_kh_k(T)$, $\rho\,\mathrm Dh/\mathrm Dt=\rho c_p\,\mathrm DT/\mathrm Dt
++\sum_kh_k\rho\,\mathrm DY_k/\mathrm Dt$. Replace $\rho\,\mathrm DY_k/\mathrm Dt$ by the right-hand
+side of \eqref{eq:species} (in the form \eqref{eq:matderiv}). Then expand
+$\divg\vq=-\divg(\lambda\nabla T)+\sum_k\divg(h_k\vj_k)$ with $\nabla h_k=c_{p,k}\nabla T$. The
+$\sum_kh_k\divg\vj_k$ terms cancel and what remains is
+\begin{equation}
+  \boxed{\rho c_p\Dt{T}=\Dt{p}+\divg(\lambda\nabla T)-\Big(\sum_k\rho Y_kc_{p,k}\vV_k\Big)\cdot\nabla T
+  -\sum_kh_kW_k\wdot_k+\bm\tau:\nabla\vu}
+  \label{eq:temperature}
+\end{equation}
+\end{derivation}
+
+\begin{intuition}[reading the temperature equation term by term]
+\begin{itemize}
+  \item $\rho c_p\,\mathrm DT/\mathrm Dt$: heating of a moving fluid parcel.
+  \item $\mathrm Dp/\mathrm Dt$: compression heating (important in engines, negligible in open flames).
+  \item $\divg(\lambda\nabla T)$: conduction from hot neighbours. In a flame this preheats the fresh gas.
+  \item $-\sum\rho Y_kc_{p,k}\vV_k\cdot\nabla T$: species with different heat capacities diffusing
+        through a temperature gradient. Small, but kept by Cantera.
+  \item $-\sum h_kW_k\wdot_k=\dot q$: \textbf{heat release} by chemistry, the same term as in the 0D reactor
+        \eqref{eq:0dT}.
+  \item $\bm\tau:\nabla\vu$: viscous heating, negligible at low speed.
+\end{itemize}
+\end{intuition}
+
+\section{Closing the system}
+
+Unknowns: $\rho$, $\vu$ (3), $p$, $T$, $Y_k$ ($K$): $K+6$. Equations: mass (1), momentum (3),
+energy (1), species ($K-1$ independent, plus $\sum Y_k=1$) and the ideal gas law (1): also $K+6$.
+The fluxes ($\bm\tau$, $\vq$, $\vV_k$) come from the transport laws, $h_k$ and $c_p$ from the NASA
+polynomials, and $\wdot_k$ from the mechanism. \textbf{Cantera supplies all these closures.} The
+flow solver only has to discretise derivatives.
+
+\section{The low-Mach-number approximation}
+\label{sec:lowmach}
+
+A laminar methane flame moves at \SI{0.4}{\metre\per\second} and the sound speed is
+\SI{350}{\metre\per\second}: Mach number $\mathrm{Ma}\sim10^{-3}$. Expanding $p=p_0(t)+\mathrm{Ma}^2p_1(\vx,t)$:
+\begin{itemize}
+  \item The \textbf{thermodynamic pressure} $p_0$ is spatially uniform and is used in the ideal gas law
+        and all property evaluations.
+  \item The \textbf{hydrodynamic pressure} $p_1$ (tiny, a few Pa across a flame) appears only in the
+        momentum equation to drive the flow.
+  \item In an open domain $p_0$ is constant, so $\mathrm Dp/\mathrm Dt\approx0$; viscous heating is
+        dropped as well.
+\end{itemize}
+Sound waves are filtered out, which allows time steps set by the flow rather than by acoustics.
+Cantera's 1D flames use exactly this: \code{flame.P} is a single number.
+
+\section{Why we do not start in 3D}
+
+For \ce{H_2}/air that is already 16 coupled nonlinear PDEs. For methane with GRI-Mech 3.0 it is 59.
+The chemical source terms are stiff, flames are thinner than \SI{1}{\milli\metre} while
+combustors are metres across, and in turbulent flows the flame is wrinkled at every scale. Before
+any of that, two 1D model problems isolate the physics:
+\begin{itemize}
+  \item \textbf{Premixed flame} (\chapref{ch:premixed}): reactions and diffusion balancing
+        convection. Output: flame speed and thickness.
+  \item \textbf{Non-premixed counterflow flame} (\chapref{ch:nonpremixed}): mixing controlled by
+        strain. Output: flame structure in mixture-fraction space and extinction.
+\end{itemize}
+Both are also the building blocks (``flamelets'') of turbulent combustion models.

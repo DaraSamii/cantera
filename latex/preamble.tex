@@ -1,0 +1,108 @@
+% ------------------------------------------------------------------ packages
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.5cm,headheight=14pt]{geometry}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{siunitx}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{caption,subcaption}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[most]{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,decorations.pathmorphing,
+  decorations.markings,decorations.pathreplacing,shapes.geometric,shapes.misc,
+  patterns,fit,backgrounds,shadings,trees}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,
+  urlcolor=blue!60!black]{hyperref}
+
+\sisetup{per-mode=symbol,detect-all}
+\graphicspath{{figures/generated/}}
+
+% ------------------------------------------------------------------ layout
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\nouppercase{\leftmark}}
+\fancyhead[R]{\small Reactive Flows \& Cantera}
+\fancyfoot[C]{\thepage}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\setlist{itemsep=0.15em,topsep=0.3em}
+\numberwithin{equation}{section}
+\numberwithin{figure}{chapter}
+
+% ------------------------------------------------------------------ colours
+\definecolor{intu}{HTML}{1F6FB2}
+\definecolor{keyc}{HTML}{2E7D32}
+\definecolor{warn}{HTML}{C62828}
+\definecolor{derv}{HTML}{6A1B9A}
+\definecolor{proj}{HTML}{E65100}
+\definecolor{codebg}{HTML}{F6F8FA}
+\definecolor{hot}{HTML}{D84315}
+\definecolor{cold}{HTML}{1565C0}
+
+% ------------------------------------------------------------------ boxes
+\newtcolorbox{intuition}[1][]{enhanced,breakable,colback=intu!5,colframe=intu,
+  fonttitle=\bfseries,title={Physical intuition\ifx&#1&\else: #1\fi},arc=2pt}
+\newtcolorbox{keypoint}[1][]{enhanced,breakable,colback=keyc!5,colframe=keyc,
+  fonttitle=\bfseries,title={Key result\ifx&#1&\else: #1\fi},arc=2pt}
+\newtcolorbox{warning}[1][]{enhanced,breakable,colback=warn!5,colframe=warn,
+  fonttitle=\bfseries,title={Pitfall\ifx&#1&\else: #1\fi},arc=2pt}
+\newtcolorbox{derivation}[1][]{enhanced,breakable,colback=derv!3,colframe=derv,
+  fonttitle=\bfseries,title={Derivation\ifx&#1&\else: #1\fi},arc=2pt}
+\newtcolorbox{project}[1][]{enhanced,breakable,colback=proj!5,colframe=proj,
+  fonttitle=\bfseries,title={Project link\ifx&#1&\else: #1\fi},arc=2pt}
+\newtcolorbox{example}[1][]{enhanced,breakable,colback=gray!4,colframe=gray!60!black,
+  fonttitle=\bfseries,title={Worked example\ifx&#1&\else: #1\fi},arc=2pt}
+\newtcolorbox{selfcheck}{enhanced,breakable,colback=yellow!6,colframe=yellow!50!black,
+  fonttitle=\bfseries,title={Check your understanding},arc=2pt}
+
+% ------------------------------------------------------------------ code
+\lstdefinestyle{py}{language=Python,basicstyle=\ttfamily\small,
+  backgroundcolor=\color{codebg},frame=single,rulecolor=\color{gray!40},
+  keywordstyle=\color{blue!70!black}\bfseries,commentstyle=\color{green!45!black}\itshape,
+  stringstyle=\color{red!60!black},showstringspaces=false,breaklines=true,
+  columns=fullflexible,keepspaces=true,upquote=true,
+  literate={φ}{{$\phi$}}1 {·}{{$\cdot$}}1}
+\lstset{style=py}
+
+% ------------------------------------------------------------------ macros
+\newcommand{\ce}[1]{\ensuremath{\mathrm{#1}}}          % chemical formulae: \ce{H_2O}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\od}[2]{\frac{\dd #1}{\dd #2}}
+\newcommand{\Dt}[1]{\frac{\mathrm{D} #1}{\mathrm{D} t}}
+\newcommand{\vu}{\bm{u}}
+\newcommand{\vx}{\bm{x}}
+\newcommand{\vn}{\bm{n}}
+\newcommand{\vV}{\bm{V}}
+\newcommand{\vj}{\bm{j}}
+\newcommand{\vq}{\bm{q}}
+\newcommand{\divg}{\nabla\!\cdot\!}
+\newcommand{\wdot}{\dot{\omega}}
+\newcommand{\Ru}{\mathcal{R}}                          % universal gas constant
+\newcommand{\Tad}{T_{\mathrm{ad}}}
+\newcommand{\SL}{S_L}
+\newcommand{\Zst}{Z_{\mathrm{st}}}
+\newcommand{\chist}{\chi_{\mathrm{st}}}
+\newcommand{\code}[1]{\texttt{\small #1}}
+\newcommand{\figref}[1]{Fig.~\ref{#1}}
+\newcommand{\eqnref}[1]{Eq.~\eqref{#1}}
+\newcommand{\secref}[1]{Section~\ref{#1}}
+\newcommand{\chapref}[1]{Chapter~\ref{#1}}
+
+% tikz styles
+\tikzset{
+  >=Stealth,
+  flow/.style={->,very thick,cold},
+  heat/.style={->,very thick,hot},
+  lbl/.style={font=\small},
+  boxnode/.style={draw,rounded corners,fill=#1!10,minimum height=8mm,inner sep=4pt,align=center,font=\small},
+  boxnode/.default=gray,
+}

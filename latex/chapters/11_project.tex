@@ -1,0 +1,242 @@
+\chapter{Project companion}
+\label{ch:project}
+
+This chapter walks through the three project parts task by task: what to compute, which theory
+applies, what the result should qualitatively look like, and how to sanity-check it. It does not
+give numerical answers. Producing and explaining them is the project.
+
+\section{Repository layout and workflow}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[every node/.style={font=\ttfamily\small,anchor=west},
+  grow via three points={one child at (0.4,-0.55) and two children at (0.4,-0.55) and (0.4,-1.1)},
+  edge from parent path={(\tikzparentnode.south west)+(0.15,0) |- (\tikzchildnode.west)}]
+\node {cantera/}
+  child {node {ct\_utils/}
+    child {node {\_\_init\_\_.py}}
+    child {node {general/\_\_init\_\_.py \normalfont\itshape\ \ Part 1: equilibrium functions}}
+    child {node {opposed\_premixed\_flame/\_\_init\_\_.py \normalfont\itshape\ \ Part 2: counterflow, $T_{\rm eq}(Z)$}}
+    child {node {free\_flame/\_\_init\_\_.py \normalfont\itshape\ \ Part 3: free flames, $\SL$, $\delta_L$}}
+  }
+  child [missing] {} child [missing] {} child [missing] {} child [missing] {}
+  child {node {notebooks/ \normalfont\itshape\ \ one notebook per task, importing ct\_utils}}
+  child {node {figures/ \normalfont\itshape\ \ part1\_*.pdf, part2\_T\_vs\_Z.pdf, \dots}}
+  child {node {latex/ \normalfont\itshape\ \ this tutorial}}
+  child {node {requirements.txt, README.md}};
+\end{tikzpicture}
+\caption{Suggested layout following the project page. The folder name \code{opposed\_premixed\_flame}
+is the one the page uses for the Part~2 (counterflow \emph{diffusion} flame) code.}
+\end{figure}
+
+\paragraph{Good practice that will be reviewed.}
+\begin{itemize}
+  \item Small, focused commits with clear messages. The commit history is discussed.
+  \item Library code in \code{ct\_utils}, analysis in notebooks. No copy-paste between tasks: Task~2 of Part~1
+        explicitly asks you to reuse Task~1's code.
+  \item A docstring on every function: arguments with units, return value, what it assumes.
+  \item Tag each finished part: \code{git tag part-1-done \&\& git push --tags}.
+\end{itemize}
+
+\paragraph{Every slide needs} a title stating what was varied, axes with units, and at least one
+sentence of physical interpretation. Figures: vector PDF, readable fonts, legends that name the case.
+
+\section{Part 1: Equilibrium}
+
+\textbf{Theory:} Chapters \ref{ch:thermo}, \ref{ch:equilibrium}; \secref{sec:ct-equil}, \secref{sec:ct-solarray}.
+\textbf{Mechanism:} \code{h2o2.yaml}. \textbf{Sanity check:} $\phi=1$, \SI{300}{\kelvin}, 1 atm gives $\Tad\approx\SI{2382}{\kelvin}$
+(this Cantera version gives \SI{2388}{\kelvin}).
+
+\subsection*{API to implement in \texttt{ct\_utils/general}}
+\begin{lstlisting}
+def equilibrium_state(phi, fuel="H2", T_u=300.0, p=101325.0,
+                      mechanism="h2o2.yaml", oxidizer="O2:1, N2:3.76"):
+    """Return a ct.Solution at the HP-equilibrium of the fresh mixture."""
+
+def equilibrium_temperature(phi, fuel="H2", T_u=300.0, p=101325.0,
+                            mechanism="h2o2.yaml", oxidizer="O2:1, N2:3.76"):
+    """Adiabatic flame temperature [K] (scalar)."""          # -> uses equilibrium_state
+
+def equilibrium_sweep(phi_range, **kw):        # np.ndarray, same shape as phi_range
+def equilibrium_sweep_Tu(T_u_range, phi=1.0, **kw)
+def equilibrium_map(phi_range, sweep_range, sweep_param="T_u",
+                    fuel="H2", fixed_T_u=300.0, fixed_p=101325.0, ...):
+    """Array of shape (len(phi_range), len(sweep_range))."""
+\end{lstlisting}
+Design tip: write \code{equilibrium\_state} once; everything else calls it (or a vectorised
+\code{SolutionArray} version). Create the \code{ct.Solution} once per sweep, not once per point: loading the
+YAML is the slowest step.
+
+\subsection*{Task 1: $\Tad(\phi)$, $\phi\in[0.4,3]$}
+\begin{itemize}
+  \item Expect: a rise on the lean side, a peak slightly rich, and a slower decline on the rich side.
+  \item Explain the peak position with dissociation and product $c_p$ (\secref{sec:Tad}, intuition box).
+  \item Explain the asymmetry with the lean/rich model (\secref{sec:Tad}, derivation box). For \ce{H_2},
+        think about the heat capacity each additional kmol of \ce{H_2} brings compared with the heat it can
+        release once \ce{O_2} is exhausted.
+  \item \SI{1000}{\kelvin} crossing: kinetics needs $T$ above the crossover (\figref{fig:arrh}) for branching
+        to beat termination. Equilibrium alone does not decide flammability, but a mixture whose
+        \emph{maximum possible} temperature is below crossover cannot sustain a flame.
+\end{itemize}
+
+\subsection*{Task 2: $\Tad(T_u)$, $T_u\in[300,800]$ K, for $\phi\in\{0.7,1.0,1.3\}$}
+\begin{itemize}
+  \item Expect nearly straight lines with slope below 1. Compute the slope with \code{np.polyfit} or
+        \code{np.gradient}.
+  \item Compare with $\bar c_{p,u}/\bar c_{p,b}$ evaluated by Cantera (\secref{sec:Tad}, preheat
+        derivation). Which $\phi$ dissociates most at the higher temperatures and therefore loses
+        most of the extra enthalpy?
+\end{itemize}
+
+\subsection*{Task 3: $p\in[1,20]$ atm; $\Tad(p)$ and $X_{\ce{OH}},X_{\ce{H}},X_{\ce{O}}$}
+\begin{itemize}
+  \item Use a log $x$-axis for $p$; radicals on a log $y$-axis.
+  \item Expect $\Tad$ to rise modestly and the radicals to fall: Le~Chatelier (\secref{sec:lechatelier}).
+        Which dissociation reaction has the largest $\Delta\nu$?
+  \item \ce{NO_x}: the thermal (Zeldovich) mechanism $\ce{O}+\ce{N_2}\to\ce{NO}+\ce{N}$ has $E_a\approx\SI{318}{\kilo\joule\per\mole}$.
+        Weigh the higher temperature against fewer O atoms. Gas turbines run at high pressure for efficiency
+        and lean to keep $T$ low.
+\end{itemize}
+
+\subsection*{Task 4: maps $\Tad(\phi,T_u)$ and $\Tad(\phi,p)$}
+\begin{lstlisting}
+PHI, TU = np.meshgrid(phi_range, Tu_range, indexing="ij")    # shape (n_phi, n_Tu)
+cs = plt.contourf(PHI, TU, T_map, levels=30, cmap="inferno")
+plt.colorbar(cs, label=r"$T_{ad}$ [K]")
+plt.contour(PHI, TU, T_map, levels=[1800], colors="w", linestyles="--")
+\end{lstlisting}
+\begin{itemize}
+  \item The \SI{1800}{\kelvin} isoline is a design constraint: the combinations of $\phi$ and preheat that keep
+        flame temperature below the level where thermal \ce{NO_x} takes off and where turbine materials suffer.
+  \item Which parameter moves $\Tad$ more over its range? Compare the colour change along each axis.
+\end{itemize}
+
+\section{Part 2: Non-premixed counterflow flames}
+
+\textbf{Theory:} \chapref{ch:nonpremixed}; Lewis number effects \secref{sec:unityLe}. \textbf{Setup:} \ce{H_2} versus air
+(\code{O2:0.21, N2:0.79}), both at \SI{300}{\kelvin}, 1 atm, width \SI{0.02}{\metre}, refinement
+\code{ratio=3, slope=0.05, curve=0.1}.
+
+\subsection*{Step 1: family of flames}
+\begin{lstlisting}
+def solve_counterflow(strain, fuel="H2:1", oxidizer="O2:0.21, N2:0.79", T=300.0,
+                      p=101325.0, width=0.02, mechanism="h2o2.yaml", flame=None):
+    """Solve a counterflow diffusion flame for a target strain rate [1/s].
+    If `flame` is given, reuse it as initial guess (continuation)."""
+    # rho_F, rho_O from ct.Solution at the inlet states
+    # u_O = strain * width / 4 ;  u_F = u_O * sqrt(rho_O / rho_F)      (Sec. 9.4)
+    # f.fuel_inlet.mdot = rho_F*u_F ; f.oxidizer_inlet.mdot = rho_O*u_O
+    # f.set_refine_criteria(...) ; f.solve(loglevel=0, auto=flame is None)
+\end{lstlisting}
+Start with the lowest strain (\code{auto=True}) and increase strain step by step, reusing the
+solution. After each solve record \code{flame.strain\_rate("max")}, $T_{\max}$, and \code{flame.extinct()}.
+
+\subsection*{Step 2: $T(Z)$ and $\chist$}
+\begin{lstlisting}
+Z = flame.mixture_fraction("Bilger")                  # check sign/limits: Z=1 at fuel inlet
+alpha = flame.thermal_conductivity / (flame.density * flame.cp)
+chi = 2 * alpha * np.gradient(Z, flame.grid)**2
+i_st = np.argmin(abs(Z - Z_st));  chi_st = chi[i_st]
+\end{lstlisting}
+Compare your $\chist$ with \eqref{eq:chiZ} using the measured strain. Agreement within a factor of order one is
+expected (variable density, $D\ne\alpha$).
+
+\begin{warning}
+The project page's helper uses \code{flame.mixture\_fraction\_dissipation\_rate}. That attribute does not
+exist in Cantera 3.2. Compute $\chi$ yourself as above.
+\end{warning}
+
+\subsection*{Step 3: $T_{\rm eq}(Z)$}
+Enthalpy-weighted mixing then \code{equilibrate("HP")} (\secref{sec:BS}). Use a grid dense near $\Zst$
+(e.g.\ \code{np.concatenate([np.linspace(0, 3*Z\_st, 80), np.linspace(3*Z\_st, 1, 40)])}).
+
+\subsection*{Step 4: the family plot}
+Strain rates $50$, $200$, $500$, $1000$, $2000~\si{\per\second}$ (adjust if extinction comes earlier). Dashed
+$T_{\rm eq}(Z)$, vertical line at $\Zst$, $x$-limits $[0,1]$. It is worth adding an inset or second panel zoomed into
+$[0,0.2]$. Save to \code{figures/part2\_T\_vs\_Z.pdf}.
+
+\paragraph{Thinking about the questions.}
+\begin{enumerate}
+  \item \emph{Asymmetry}: geometry ($\Zst\ll1$) plus heat capacity of the fuel stream per kg
+        (\secref{sec:BS}).
+  \item \emph{Peak shift}: track $Z(T_{\max})$ vs.\ $\chist$. Differential diffusion of \ce{H_2} and H matters here.
+  \item \emph{Area between curves}: chemical enthalpy not converted to sensible enthalpy: radicals not
+        recombined, plus differential diffusion. It grows with $\chist$, i.e.\ as Da shrinks.
+  \item \emph{Closest to extinction}: highest $\chist$ that still burns; detect extinction via $T_{\max}$ or
+        \code{extinct()}. A sharp drop in $T_{\max}$ between two strains brackets $\chi_q$.
+  \item \emph{Lowest strain $\ne$ equilibrium}: see the closing list of \chapref{ch:nonpremixed}.
+\end{enumerate}
+
+\section{Part 3: Premixed free flames}
+
+\textbf{Theory:} \chapref{ch:premixed}, \secref{sec:ct-refine}, \secref{sec:ct-sweeps}.
+
+\subsection*{API in \texttt{ct\_utils/free\_flame}}
+\begin{lstlisting}
+def solve_free_flame(phi, T_u=300.0, p=101325.0, transport="mixture-averaged",
+                     fuel="H2", oxidizer="O2:1, N2:3.76",
+                     mechanism="h2o2.yaml", width=0.03, flame=None):
+    """Return a converged ct.FreeFlame (research-grade refinement)."""
+def flame_speed(flame):     return flame.velocity[0]
+def flame_thickness(flame): # (T_b - T_u) / max(dT/dx)
+def flame_speed_sweep(phi_range, **kw)        # reuse previous solution as guess
+def flame_thickness_sweep(phi_range, **kw)
+\end{lstlisting}
+
+\subsection*{Task 1: structure at $\phi=1$}
+Three stacked panels against $x$ [mm] with shared $x$-axis: (1) $T$ with $T_u$, $T_b$ and a bracket of width
+$\delta_L$; (2) \ce{H_2}, \ce{O_2}, \ce{H_2O}, OH, H; (3) HRR in \si{\mega\watt\per\metre\cubed}. Centre $x$ on the HRR peak
+and zoom to a few $\delta_L$. Questions: why HRR precedes $T_{\max}$ (\figref{fig:zones}); where radicals are
+produced versus where they survive; $\delta_L$ relative to the domain (\code{width} must be $\gg\delta_L$,
+otherwise the boundary conditions bite).
+
+\subsection*{Task 2: equilibrium check}
+Error $|T_{\rm end}-\Tad|/\Tad$ and a grouped bar chart of $X_k$ (flame end vs.\ equilibrium) for \ce{H_2O},
+\ce{H_2}, \ce{O_2}, OH (log scale for minor species). Over 1\%: tighten refinement or widen the domain
+(\secref{sec:burntHP}, \figref{fig:grid}).
+
+\subsection*{Task 3: transport models}
+Solve once with \code{"mixture-averaged"}, then switch to \code{"unity-Lewis-number"} and re-solve.
+\begin{lstlisting}
+x_mid = np.interp(0.5*(T_u + T_b), flame.T, flame.grid)     # T is monotonic in a free flame
+x_shifted = (flame.grid - x_mid) * 1e3                       # mm
+gas = flame.gas                                              # FreeFlame has no mixture_fraction()
+Z = np.empty(len(flame.grid))
+for j in range(len(flame.grid)):
+    gas.TPY = flame.T[j], flame.P, flame.Y[:, j]
+    Z[j] = gas.mixture_fraction("H2:1", "O2:1, N2:3.76", element="H")   # or element="Bilger"
+\end{lstlisting}
+(In Cantera 3.2 only \code{CounterflowDiffusionFlame} has a \code{mixture\_fraction("Bilger")} method;
+\code{FreeFlame} and \code{SolutionArray} do not, hence the loop. Restore the flame's state afterwards if you
+keep using \code{gas}.)
+Interpretation: \secref{sec:lepremixed}. For methane, look at \figref{fig:lewis}: $\mathrm{Le}_{\ce{CH_4}}\approx1$.
+
+\subsection*{Task 4: $\SL(\phi)$, $\delta_L(\phi)$, $\phi\in[0.4,2.5]$, both transport models}
+Sweep outwards from $\phi=1$ in both directions, reusing solutions. Very lean \ce{H_2} needs a wider domain and
+tighter refinement. Plot $\SL\delta_L/\alpha_u$ as a check of \eqref{eq:SLscaling}. Compare the $\SL$ peak with
+the $\Tad$ peak from Part~1 using the three factors in the intuition box of \chapref{ch:premixed}.
+
+\subsection*{Task 5: pressure and preheat}
+\begin{lstlisting}
+n, lnA = np.polyfit(np.log(p_atm), np.log(S_L), 1)        # S_L ~ p^n
+m, lnB = np.polyfit(np.log(T_u / 300), np.log(S_L), 1)    # S_L ~ T_u^m
+\end{lstlisting}
+\begin{itemize}
+  \item Domain width: $\delta_L$ shrinks roughly as $1/p$, so a fixed \SI{3}{\centi\metre} domain is wasteful at
+        10~atm, while the refinement must still resolve it. Check grid point counts.
+  \item Compare the exponent with $n/2-1$ (\secref{sec:scaling}), recalling the R2/R5 competition.
+  \item On ``$\SL\delta_L$ nearly constant'': test it. Scaling says $\SL\delta_L\propto\alpha_u\propto1/p$ while
+        $\rho_u\SL\delta_L\approx\lambda/c_p$ is nearly pressure-independent. Decide which one your data supports
+        and what that means physically.
+\end{itemize}
+
+\section{Checklist before each tag}
+\begin{itemize}
+  \item[$\square$] Every number has units; every plot has labelled axes with units and a meaningful title.
+  \item[$\square$] Equilibrium sanity values reproduced (\SI{2382}{\kelvin}-ish at $\phi=1$).
+  \item[$\square$] Grid convergence shown at least once (Part 3), with grid sizes reported.
+  \item[$\square$] Flame end states within 1\% of HP equilibrium.
+  \item[$\square$] Functions importable: \code{from ct\_utils.general import equilibrium\_sweep}.
+  \item[$\square$] Notebook runs top-to-bottom on a fresh kernel.
+  \item[$\square$] Each slide has one sentence of physics, not just a description of the curve.
+\end{itemize}
