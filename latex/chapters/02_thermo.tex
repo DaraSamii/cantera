@@ -43,6 +43,21 @@ $\Ru=N_Ak_B$:
 \end{equation}
 where $W$ is the molar mass [kg/kmol] and $\rho=nW/V$.
 \end{derivation}
+\begin{symbols}
+$N$ & number of molecules in the box & \nodim\\
+$m$ & mass of one molecule & \si{\kilo\gram}\\
+$V$, $L$, $A$ & box volume, box length, wall area & \si{\metre\cubed}, \si{\metre}, \si{\metre\squared}\\
+$c_x$, $c$ & molecular velocity component normal to the wall, molecular speed & \si{\metre\per\second}\\
+$\overline{c^2}$ & mean of the squared molecular speed & \si{\metre\squared\per\second\squared}\\
+$p$ & pressure (force per unit wall area) & \si{\pascal}\\
+$k_B$ & Boltzmann constant, $1.380649\times10^{-23}$ & \si{\joule\per\kelvin}\\
+$T$ & temperature & \si{\kelvin}\\
+$n$ & amount of substance & \si{\kilo\mole}\\
+$N_A$ & Avogadro's number, $6.022\times10^{26}$ & \si{\per\kilo\mole}\\
+$\Ru=N_Ak_B$ & universal gas constant & 8314.46 \si{\joule\per\kilo\mole\per\kelvin}\\
+$W$ & molar mass & \si{\kilo\gram\per\kilo\mole}\\
+$\rho$ & density & \si{\kilo\gram\per\metre\cubed}\\
+\end{symbols}
 
 \begin{intuition}
 Pressure is the momentum flux of molecules hammering the wall; temperature is how hard each one
@@ -79,6 +94,15 @@ Then
 \end{equation}
 The last one uses $n/V=p/(\Ru T)$ from \eqref{eq:idealgas}.
 \end{derivation}
+\begin{symbols}
+$n_k$ & amount of species $k$ & \si{\kilo\mole}\\
+$m_k=n_kW_k$ & mass of species $k$ & \si{\kilo\gram}\\
+$X_k$, $Y_k$ & mole fraction, mass fraction of species $k$ & \nodim\\
+$W_k$, $W$ & molar mass of species $k$, mean molar mass of the mixture & \si{\kilo\gram\per\kilo\mole}\\
+$C_k$ & molar concentration of species $k$ & \si{\kilo\mole\per\metre\cubed}\\
+$p$, $T$, $\rho$ & pressure, temperature, density & \si{\pascal}, \si{\kelvin}, \si{\kilo\gram\per\metre\cubed}\\
+$\Ru$ & universal gas constant & 8314.46 \si{\joule\per\kilo\mole\per\kelvin}\\
+\end{symbols}
 
 \begin{example}[stoichiometric \ce{H_2}/air]
 Air is modelled as $\ce{O_2}:\ce{N_2}=1:3.76$ by moles. Burning one \ce{H_2} needs
@@ -115,6 +139,14 @@ In a flowing system there is a second reason: pushing a parcel of fluid of volum
 control volume against pressure $p$ requires flow work $pV$. The energy carried by a parcel is
 therefore $U+pV=H$ (plus kinetic energy).
 \end{derivation}
+\begin{symbols}
+$U$, $u$ & internal energy (total, per kg) & \si{\joule}, \si{\joule\per\kilo\gram}\\
+$H$, $h$ & enthalpy $U+pV$ (total, per kg) & \si{\joule}, \si{\joule\per\kilo\gram}\\
+$Q$, $\delta Q$ & heat added to the system (finite, infinitesimal) & \si{\joule}\\
+$W$, $\delta W$ & work done by the system (here not a molar mass) & \si{\joule}\\
+$p$, $V$ & pressure, volume & \si{\pascal}, \si{\metre\cubed}\\
+$p/\rho$ & flow work per kg & \si{\joule\per\kilo\gram}\\
+\end{symbols}
 
 \begin{figure}[H]
 \centering
@@ -137,6 +169,12 @@ depend on $T$ only, and since $h=u+\Ru T/W$,
 \begin{equation}
   c_p-c_v=\frac{\Ru}{W},\qquad \gamma=c_p/c_v .
 \end{equation}
+
+\begin{symbols}
+$c_p$, $c_v$ & specific heat capacity at constant pressure, volume & \si{\joule\per\kilo\gram\per\kelvin}\\
+$\gamma$ & ratio of heat capacities & \nodim\\
+$\Ru/W$ & specific gas constant & \si{\joule\per\kilo\gram\per\kelvin}\\
+\end{symbols}
 
 \begin{intuition}[why $c_p$ grows with temperature]
 Energy stored in a molecule is shared among its ``modes'': translation (always $\tfrac32 \Ru T$),
@@ -166,6 +204,13 @@ The enthalpy of species $k$ at any temperature is then
   \underbrace{\int_{T^\circ}^{T}\hat c_{p,k}(T')\,\dd T'}_{\text{sensible}} .
   \label{eq:hk}
 \end{equation}
+
+\begin{symbols}
+$\hat h_k(T)$ & molar enthalpy of species $k$ & \si{\joule\per\kilo\mole}\\
+$\Delta\hat h_{f,k}^\circ$ & standard enthalpy of formation (chemical part) & \si{\joule\per\kilo\mole}\\
+$\hat c_{p,k}$ & molar heat capacity of $k$ & \si{\joule\per\kilo\mole\per\kelvin}\\
+$T^\circ$, $T'$ & reference temperature 298.15, integration variable & \si{\kelvin}\\
+\end{symbols}
 
 \begin{table}[H]
 \centering
@@ -216,6 +261,16 @@ partial pressure $p_k=X_kp$, so
   \label{eq:sk}
 \end{equation}
 \end{derivation}
+\begin{symbols}
+$\hat s$, $\hat s_k$ & molar entropy (mixture, species $k$) & \si{\joule\per\kilo\mole\per\kelvin}\\
+$\hat s_k^\circ(T)$ & standard-state molar entropy of $k$ (at $p^\circ$) & \si{\joule\per\kilo\mole\per\kelvin}\\
+$\hat c_p$ & molar heat capacity at constant pressure & \si{\joule\per\kilo\mole\per\kelvin}\\
+$v=1/\rho$ & specific volume & \si{\metre\cubed\per\kilo\gram}\\
+$p_k=X_kp$ & partial pressure of species $k$ & \si{\pascal}\\
+$p^\circ$ & standard pressure (Cantera: 101\,325) & \si{\pascal}\\
+$X_k$ & mole fraction of $k$ & \nodim\\
+$T$, $\Ru$ & temperature, universal gas constant & \si{\kelvin}, 8314.46 \si{\joule\per\kilo\mole\per\kelvin}\\
+\end{symbols}
 
 \begin{intuition}[the mixing term $-\Ru\ln X_k$]
 Since $X_k<1$, $-\Ru\ln X_k>0$: spreading a species out in a mixture raises its entropy. As
@@ -230,6 +285,13 @@ entropically ``free''.
   \qquad \hat g_k^\circ=\hat h_k^\circ-T\hat s_k^\circ .
   \label{eq:mu}
 \end{equation}
+
+\begin{symbols}
+$\mu_k=\hat g_k$ & chemical potential (molar Gibbs energy of $k$ in the mixture) & \si{\joule\per\kilo\mole}\\
+$\hat g_k^\circ$ & standard-state molar Gibbs energy & \si{\joule\per\kilo\mole}\\
+$\hat h_k^\circ$, $\hat s_k^\circ$ & standard molar enthalpy, entropy & \si{\joule\per\kilo\mole}, \si{\joule\per\kilo\mole\per\kelvin}\\
+$p$, $p^\circ$, $X_k$ & pressure, standard pressure, mole fraction & \si{\pascal}, \si{\pascal}, --\\
+\end{symbols}
 Chapter~\ref{ch:equilibrium} shows that at fixed $T$ and $p$, a mixture evolves until $G=\sum_kn_k\mu_k$
 is minimal.
 
@@ -257,6 +319,15 @@ $a_6$ and $a_7$ are the integration constants. $a_6$ is chosen so that $\hat h^\
 =\Delta\hat h_f^\circ$: \textbf{it carries the chemical energy}. $a_7$ fixes the absolute
 entropy (third law).
 \end{derivation}
+\begin{symbols}
+$\hat c_p^\circ$, $\hat h^\circ$, $\hat s^\circ$ & standard-state molar heat capacity, enthalpy, entropy & \si{\joule\per\kilo\mole\per\kelvin}, \si{\joule\per\kilo\mole}, \si{\joule\per\kilo\mole\per\kelvin}\\
+$a_1$ & constant part of $\hat c_p^\circ/\Ru$ & \nodim\\
+$a_2,a_3,a_4,a_5$ & temperature coefficients of $\hat c_p^\circ/\Ru$ & \si{\per\kelvin}, \si{\per\kelvin\squared}, \si{\per\kelvin\cubed}, \si{\kelvin^{-4}}\\
+$a_6$ & enthalpy integration constant (carries $\Delta\hat h_f^\circ$), equal to $\hat h^\circ/\Ru$ offset & \si{\kelvin}\\
+$a_7$ & entropy integration constant & \nodim\\
+$\Delta\hat h_f^\circ$ & standard enthalpy of formation & \si{\joule\per\kilo\mole}\\
+$T$ & temperature & \si{\kelvin}\\
+\end{symbols}
 
 \begin{figure}[H]
 \centering

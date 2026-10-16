@@ -42,6 +42,18 @@ Exactly the same argument for momentum and for energy gives the kinematic viscos
 $\nu\approx\tfrac13\bar c\ell$ and the thermal diffusivity $\alpha\approx\tfrac13\bar c\ell$ (up to
 factors of order one).
 \end{derivation}
+\begin{symbols}
+$\bar c$ & mean molecular speed $\sqrt{8k_BT/\pi m}$ & \si{\metre\per\second}\\
+$m$ & mass of one molecule & \si{\kilo\gram}\\
+$\ell$ & mean free path & \si{\metre}\\
+$n$ & number density & \si{\per\metre\cubed}\\
+$\sigma$ & collision cross-section & \si{\metre\squared}\\
+$C(x)$ & concentration of the diffusing species & \si{\kilo\mole\per\metre\cubed}\\
+$J$ & net molar flux through the plane & \si{\kilo\mole\per\metre\squared\per\second}\\
+$D$, $\nu$, $\alpha$ & mass diffusivity, kinematic viscosity, thermal diffusivity & \si{\metre\squared\per\second}\\
+$\mu=\rho\nu$ & dynamic viscosity & \si{\pascal\second}\\
+$\lambda=\rho c_p\alpha$ & thermal conductivity & \si{\watt\per\metre\per\kelvin}\\
+\end{symbols}
 
 \begin{keypoint}[scalings]
 With $\bar c\propto\sqrt{T/m}$ and $\ell\propto1/n\propto T/p$:
@@ -78,6 +90,18 @@ is much wider on its hot side.}
   \text{Fick (species):}\quad &\vj_k=\rho Y_k\vV_k\approx-\rho D_{k}\nabla Y_k .
   \label{eq:fick}
 \end{align}
+
+\begin{symbols}
+$\tau_{ij}$ & viscous stress component & \si{\pascal}\\
+$\mu$ & dynamic viscosity & \si{\pascal\second}\\
+$u_i$, $x_i$ & velocity component, coordinate & \si{\metre\per\second}, \si{\metre}\\
+$\delta_{ij}$ & Kronecker delta (1 if $i=j$, else 0) & \nodim\\
+$\vq$ & heat flux & \si{\watt\per\metre\squared}\\
+$\lambda$ & thermal conductivity & \si{\watt\per\metre\per\kelvin}\\
+$h_k$ & specific enthalpy of $k$ & \si{\joule\per\kilo\gram}\\
+$\vj_k$, $\vV_k$ & diffusive mass flux, diffusion velocity of $k$ & \si{\kilo\gram\per\metre\squared\per\second}, \si{\metre\per\second}\\
+$D_k$ & diffusivity of $k$ & \si{\metre\squared\per\second}\\
+\end{symbols}
 $\vV_k$ is the \textbf{diffusion velocity} of species $k$ relative to the mass-averaged velocity
 $\vu$, and $\vj_k$ the diffusive mass flux. The $\sum h_k\vj_k$ term in $\vq$ is
 enthalpy carried by species diffusing: a hot H atom diffusing upstream brings its enthalpy along.
@@ -92,6 +116,13 @@ Fick's law with arbitrary $D_k$ violates this. Practical codes, including Canter
 \textbf{correction velocity} $\vV_c=-\sum_kY_k\vV_k^{\rm Fick}$ to every species so that the sum
 is zero.
 \end{derivation}
+\begin{symbols}
+$\vu$ & mass-averaged velocity & \si{\metre\per\second}\\
+$\vu_k$ & velocity of species $k$ & \si{\metre\per\second}\\
+$\vV_k=\vu_k-\vu$ & diffusion velocity of $k$ & \si{\metre\per\second}\\
+$\vV_c$ & correction velocity added to every species & \si{\metre\per\second}\\
+$\vj_k=\rho Y_k\vV_k$ & diffusive mass flux of $k$ & \si{\kilo\gram\per\metre\squared\per\second}\\
+\end{symbols}
 
 \section{Mixture-averaged and multicomponent diffusion}
 
@@ -104,6 +135,14 @@ mixture, species $k$ collides with everything. Two models:
           D_{km}=\frac{1-Y_k}{\sum_{j\ne k}X_j/\mathcal D_{jk}},\qquad
           \vj_k=-\rho\frac{W_k}{W}D_{km}\nabla X_k+\rho Y_k\vV_c .
         \end{equation}
+
+\begin{symbols}
+$D_{km}$ & mixture-averaged diffusivity of $k$ & \si{\metre\squared\per\second}\\
+$\mathcal D_{jk}$ & binary diffusivity of the pair $j$--$k$ & \si{\metre\squared\per\second}\\
+$X_j$, $Y_k$ & mole, mass fractions & \nodim\\
+$W_k$, $W$ & molar mass of $k$, of the mixture & \si{\kilo\gram\per\kilo\mole}\\
+$\vV_c$ & correction velocity & \si{\metre\per\second}\\
+\end{symbols}
         Cheap and accurate to a few percent for most flames.
   \item \textbf{Multicomponent} (\code{"multicomponent"}): solves the full Stefan--Maxwell relations
         $\nabla X_k=\sum_j\frac{X_kX_j}{\mathcal D_{kj}}(\vV_j-\vV_k)+\dots$, plus
@@ -194,6 +233,16 @@ which has no source term: $h$ is transported like a passive dye. By the same arg
 \emph{elemental} mass fraction (and therefore the mixture fraction, \chapref{ch:nonpremixed}) is
 conserved, because chemistry rearranges atoms but never creates them.
 \end{derivation}
+\begin{symbols}
+$\vq$ & heat flux & \si{\watt\per\metre\squared}\\
+$\lambda$ & thermal conductivity & \si{\watt\per\metre\per\kelvin}\\
+$h$, $h_k$ & specific enthalpy of mixture, of species $k$ & \si{\joule\per\kilo\gram}\\
+$c_p$ & specific heat capacity & \si{\joule\per\kilo\gram\per\kelvin}\\
+$\alpha=\lambda/\rho c_p$ & thermal diffusivity & \si{\metre\squared\per\second}\\
+$D_k$ & diffusivity of species $k$ & \si{\metre\squared\per\second}\\
+$\mathrm{Le}_k=\alpha/D_k$ & Lewis number of species $k$ & \nodim\\
+$\nabla T$, $\nabla Y_k$ & temperature and mass-fraction gradients & \si{\kelvin\per\metre}, \si{\per\metre}\\
+\end{symbols}
 
 \begin{keypoint}
 With unity Lewis numbers, enthalpy and element mass fractions are linear functions of the mixture

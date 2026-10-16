@@ -68,6 +68,21 @@ Generalising the $T^{1/2}$ to $T^\beta$ (to absorb effects the hard-sphere model
   \label{eq:arrhenius}
 \end{equation}
 \end{derivation}
+\begin{symbols}
+$r_A$, $r_B$ & molecular radii & \si{\metre}\\
+$\sigma_{AB}$ & collision cross-section $\pi(r_A+r_B)^2$ & \si{\metre\squared}\\
+$\bar c_{rel}$ & mean relative speed of A and B & \si{\metre\per\second}\\
+$m_{AB}$ & reduced mass $m_Am_B/(m_A+m_B)$ & \si{\kilo\gram}\\
+$n_A$, $n_B$ & number densities & \si{\per\metre\cubed}\\
+$Z_{AB}$ & collision rate per unit volume & \si{\per\metre\cubed\per\second}\\
+$E_a$ & activation energy (barrier height) & \si{\joule\per\kilo\mole}\\
+$P$ & steric (orientation) factor & \nodim\\
+$k_B$, $N_A$ & Boltzmann constant, Avogadro's number & \si{\joule\per\kelvin}, \si{\per\kilo\mole}\\
+$k(T)$ & rate constant; for a bimolecular reaction & \si{\metre\cubed\per\kilo\mole\per\second}\\
+$A$ & pre-exponential factor (order $n$ reaction) & $(\si{\metre\cubed\per\kilo\mole})^{n-1}\si{\per\second}\,\si{\kelvin}^{-\beta}$\\
+$\beta$ & temperature exponent & \nodim\\
+$[\mathrm A]$, $[\mathrm B]$ & molar concentrations & \si{\kilo\mole\per\metre\cubed}\\
+\end{symbols}
 
 \begin{intuition}
 $A T^\beta$ counts how often molecules meet in the right orientation; it varies slowly with $T$.
@@ -97,6 +112,16 @@ and the \textbf{net molar production rate} of species $k$ sums over all reaction
   \wdot_k=\sum_{i=1}^{I}\nu_{ki}\,q_i,\qquad \nu_{ki}=\nu''_{ki}-\nu'_{ki}.
   \label{eq:wdot}
 \end{equation}
+
+\begin{symbols}
+$q_i$ & net rate of progress of reaction $i$ & \si{\kilo\mole\per\metre\cubed\per\second}\\
+$k_{f,i}$, $k_{r,i}$ & forward, reverse rate constants & depend on order\\
+$C_k$ & molar concentration & \si{\kilo\mole\per\metre\cubed}\\
+$\nu'_{ki}$, $\nu''_{ki}$, $\nu_{ki}$ & reactant, product, net stoichiometric coefficients & \nodim\\
+$\wdot_k$ & net molar production rate of $k$ & \si{\kilo\mole\per\metre\cubed\per\second}\\
+$W_k\wdot_k$ & net mass production rate of $k$ & \si{\kilo\gram\per\metre\cubed\per\second}\\
+$I$, $K$ & number of reactions, of species & \nodim\\
+\end{symbols}
 In matrix form $\bm{\wdot}=\mathsf N\bm q$, with $\mathsf N$ the $K\times I$ stoichiometric matrix.
 The mass production rate is $W_k\wdot_k$ [\si{\kilo\gram\per\metre\cubed\per\second}]. Mass is
 conserved in every reaction, so $\sum_kW_k\wdot_k=0$ exactly.
@@ -125,6 +150,15 @@ Mechanisms therefore list only $(A,\beta,E_a)$ for the forward direction. Canter
 $k_{r,i}=k_{f,i}/K_{c,i}$ from the NASA polynomials. This guarantees that a kinetic simulation
 run for long enough ends exactly at the thermodynamic equilibrium of \chapref{ch:equilibrium}.
 \end{derivation}
+\begin{symbols}
+$k_{f,i}$, $k_{r,i}$ & forward, reverse rate constants of reaction $i$ & depend on reaction order\\
+$C_{k,\rm eq}$ & equilibrium concentration of species $k$ & \si{\kilo\mole\per\metre\cubed}\\
+$K_{c,i}$ & concentration-based equilibrium constant & $(\si{\kilo\mole\per\metre\cubed})^{\Delta\nu_i}$\\
+$K_{p,i}$ & pressure-based equilibrium constant & \nodim\\
+$\Delta\nu_i$ & net change in moles in reaction $i$ & \nodim\\
+$\Delta G_i^\circ$ & standard Gibbs energy change of reaction $i$ & \si{\joule\per\kilo\mole}\\
+$p^\circ$, $\Ru$, $T$ & standard pressure, gas constant, temperature & \si{\pascal}, \si{\joule\per\kilo\mole\per\kelvin}, \si{\kelvin}\\
+\end{symbols}
 
 \section{Third bodies and pressure dependence}
 
@@ -135,6 +169,12 @@ collide at the same time and carry the energy away:
 \ce{H}+\ce{OH}+\mathrm M\to\ce{H_2O}+\mathrm M,\qquad
 q=k\,[\ce{H}][\ce{OH}][\mathrm M],\qquad [\mathrm M]=\sum_k\epsilon_kC_k .
 \]
+
+\begin{symbols}
+$[\mathrm M]$ & effective third-body concentration & \si{\kilo\mole\per\metre\cubed}\\
+$\epsilon_k$ & collision efficiency of species $k$ & \nodim\\
+$k$ & termolecular rate constant & \si{\metre^6\per\kilo\mole\squared\per\second}\\
+\end{symbols}
 The \textbf{efficiencies} $\epsilon_k$ capture that some molecules absorb energy better: \ce{H_2O}
 ($\epsilon\approx 12$) is far better than Ar ($\epsilon\approx 0.7$).
 
@@ -144,6 +184,13 @@ always stabilised and the rate stops depending on [M]:
 \begin{equation}
   k=\frac{k_0[\mathrm M]\,k_\infty}{k_\infty+k_0[\mathrm M]}=k_\infty\frac{P_r}{1+P_r},\qquad P_r=\frac{k_0[\mathrm M]}{k_\infty},
 \end{equation}
+
+\begin{symbols}
+$k_0$ & low-pressure limit rate constant & \si{\metre^6\per\kilo\mole\squared\per\second}\\
+$k_\infty$ & high-pressure limit rate constant & \si{\metre\cubed\per\kilo\mole\per\second}\\
+$P_r$ & reduced pressure & \nodim\\
+$F$ & Troe broadening factor & \nodim\\
+\end{symbols}
 so $k\approx k_0[\mathrm M]$ at low $p$ and $k\approx k_\infty$ at high $p$. Troe's form multiplies
 this by a broadening factor $F$. In the YAML file these appear as \code{type: falloff} with
 \code{low-P-rate-constant}, \code{high-P-rate-constant} and \code{Troe:} entries.
@@ -202,6 +249,12 @@ Add R2 + R3 + 2$\times$R4:
 One H atom goes in, \textbf{three} come out. Each cycle multiplies the radical pool, and the
 radical population grows exponentially. This is chain branching.
 \end{derivation}
+\begin{symbols}
+H, O & hydrogen and oxygen atoms (radicals) & --\\
+OH & hydroxyl radical & --\\
+\ce{HO_2} & hydroperoxyl radical (much less reactive than H) & --\\
+R2, R3, R4 & reactions of the table above (branching, branching, propagation) & --\\
+\end{symbols}
 
 \begin{derivation}[branching versus termination: the crossover temperature]
 Let $n$ be the H-atom concentration and focus on its two fates: R2 (rate $k_2[\ce{O_2}]n$), which
@@ -216,6 +269,14 @@ $2k_2(T)=k_5(T)[\mathrm M]$ is the \textbf{crossover temperature}. $k_2$ has a l
 $k_5$ has none, so branching wins at high $T$. $[\mathrm M]=p/\Ru T$, so termination gains with
 pressure.
 \end{derivation}
+\begin{symbols}
+$n$ & concentration of H atoms & \si{\kilo\mole\per\metre\cubed}\\
+$\dot r_{\rm init}$ & rate at which initiation creates radicals & \si{\kilo\mole\per\metre\cubed\per\second}\\
+$k_2$ & rate constant of R2 (bimolecular) & \si{\metre\cubed\per\kilo\mole\per\second}\\
+$k_5$ & rate constant of R5 (termolecular) & \si{\metre^6\per\kilo\mole\squared\per\second}\\
+$[\mathrm M]$, $[\ce{O_2}]$ & third-body and oxygen concentrations; $[\mathrm M]\approx p/\Ru T$ & \si{\kilo\mole\per\metre\cubed}\\
+$(2k_2-k_5[\mathrm M])[\ce{O_2}]$ & net radical growth rate $=1/\tau$ & \si{\per\second}\\
+\end{symbols}
 
 \begin{figure}[H]
 \centering
@@ -248,6 +309,12 @@ recombination and propagation steps that form \ce{H_2O} (R4, R6). The local volu
 \begin{equation}
   \dot q=-\sum_k\hat h_k(T)\,\wdot_k\qquad[\si{\watt\per\metre\cubed}],
 \end{equation}
+
+\begin{symbols}
+$\dot q$ & volumetric heat release rate & \si{\watt\per\metre\cubed}\\
+$\hat h_k$ & molar enthalpy of $k$ (including formation) & \si{\joule\per\kilo\mole}\\
+$\wdot_k$ & net molar production rate & \si{\kilo\mole\per\metre\cubed\per\second}\\
+\end{symbols}
 because destroying a species of enthalpy $\hat h_k$ and making another of lower enthalpy frees
 the difference as sensible heat.
 
@@ -280,6 +347,13 @@ For back-of-envelope reasoning we sometimes pretend the whole chain is one step:
 \begin{equation}
   \wdot_F=-A\,[F]^a[O]^b\,e^{-E/\Ru T},\qquad n=a+b\ \text{(overall order)} .
 \end{equation}
+
+\begin{symbols}
+$[F]$, $[O]$ & fuel, oxidiser concentrations & \si{\kilo\mole\per\metre\cubed}\\
+$a$, $b$, $n$ & reaction orders in fuel, oxidiser, overall & \nodim\\
+$A$ & pre-factor & $(\si{\metre\cubed\per\kilo\mole})^{n-1}\si{\per\second}$\\
+$E$ & global activation energy & \si{\joule\per\kilo\mole}\\
+\end{symbols}
 Since $[F]=\rho Y_F/W_F\propto p$, the mass reaction rate scales like $p^{n}$ at fixed $T$ and
 composition. We will use this in \chapref{ch:premixed} to predict how flame speed depends on
 pressure. The \emph{effective} order of \ce{H_2}/air chemistry is less than 2 near crossover, precisely

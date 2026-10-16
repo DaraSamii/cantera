@@ -13,6 +13,12 @@ With $\varphi=1$, no diffusion of total mass and no source:
   \label{eq:mass}
 \end{equation}
 
+\begin{symbols}
+$\rho$ & density & \si{\kilo\gram\per\metre\cubed}\\
+$\vu$ & velocity & \si{\metre\per\second}\\
+$t$ & time & \si{\second}\\
+\end{symbols}
+
 \section{Species}
 
 With $\varphi=Y_k$, diffusive flux $\vj_k=\rho Y_k\vV_k$ and chemical source $W_k\wdot_k$:
@@ -20,6 +26,13 @@ With $\varphi=Y_k$, diffusive flux $\vj_k=\rho Y_k\vV_k$ and chemical source $W_
   \pd{(\rho Y_k)}{t}+\divg(\rho\vu Y_k)=-\divg(\rho Y_k\vV_k)+W_k\wdot_k,\qquad k=1\dots K.
   \label{eq:species}
 \end{equation}
+
+\begin{symbols}
+$Y_k$ & mass fraction of species $k$ & \nodim\\
+$\vV_k$ & diffusion velocity of $k$ & \si{\metre\per\second}\\
+$\rho Y_k\vV_k$ & diffusive mass flux of $k$ & \si{\kilo\gram\per\metre\squared\per\second}\\
+$W_k\wdot_k$ & chemical mass production rate of $k$ & \si{\kilo\gram\per\metre\cubed\per\second}\\
+\end{symbols}
 Summing over all $k$, and using $\sum Y_k=1$, $\sum\rho Y_k\vV_k=0$ and $\sum W_k\wdot_k=0$, gives back
 \eqref{eq:mass}. So only $K-1$ species equations are independent. Cantera solves all $K$ and
 enforces the constraints numerically.
@@ -42,6 +55,13 @@ The generic law with $\varphi=\vu$ and Gauss's theorem gives
 \end{equation}
 with $\bm\tau$ the Newtonian stress of \chapref{ch:transport}.
 \end{derivation}
+\begin{symbols}
+$\rho\vu$ & momentum per unit volume & \si{\kilo\gram\per\metre\squared\per\second}\\
+$\vu\vu$ & dyadic product: momentum flux tensor per unit density & \si{\metre\squared\per\second\squared}\\
+$p$ & pressure & \si{\pascal}\\
+$\bm\tau$ & viscous stress tensor & \si{\pascal}\\
+$\bm g$ & gravitational acceleration & \si{\metre\per\second\squared}\\
+\end{symbols}
 
 \section{Energy}
 
@@ -70,6 +90,19 @@ $\sum_kh_k\divg\vj_k$ terms cancel and what remains is
   \label{eq:temperature}
 \end{equation}
 \end{derivation}
+\begin{symbols}
+$u$ (scalar) & specific internal energy (not velocity) & \si{\joule\per\kilo\gram}\\
+$e_t=u+\tfrac12|\vu|^2$ & specific total energy & \si{\joule\per\kilo\gram}\\
+$h=u+p/\rho$ & specific enthalpy & \si{\joule\per\kilo\gram}\\
+$\vq$ & heat flux & \si{\watt\per\metre\squared}\\
+$p\vu$, $\bm\tau\cdot\vu$ & rate of work by pressure and viscous forces (per area) & \si{\watt\per\metre\squared}\\
+$\bm\tau:\nabla\vu$ & viscous dissipation (heating) & \si{\watt\per\metre\cubed}\\
+$c_p$, $c_{p,k}$ & specific heat capacity of mixture, of species $k$ & \si{\joule\per\kilo\gram\per\kelvin}\\
+$\lambda$ & thermal conductivity & \si{\watt\per\metre\per\kelvin}\\
+$\vV_k$, $\vj_k$ & diffusion velocity, diffusive mass flux of $k$ & \si{\metre\per\second}, \si{\kilo\gram\per\metre\squared\per\second}\\
+$h_kW_k\wdot_k$ & enthalpy carried by chemical production of $k$ & \si{\watt\per\metre\cubed}\\
+$\mathrm D/\mathrm Dt$ & material derivative & unit of argument per \si{\second}\\
+\end{symbols}
 
 \begin{intuition}[reading the temperature equation term by term]
 \begin{itemize}
@@ -107,6 +140,13 @@ A laminar methane flame moves at \SI{0.4}{\metre\per\second} and the sound speed
 \end{itemize}
 Sound waves are filtered out, which allows time steps set by the flow rather than by acoustics.
 Cantera's 1D flames use exactly this: \code{flame.P} is a single number.
+
+\begin{symbols}
+$\mathrm{Ma}=u/c$ & Mach number & \nodim\\
+$c$ & speed of sound & \si{\metre\per\second}\\
+$p_0(t)$ & thermodynamic (uniform) pressure & \si{\pascal}\\
+$p_1(\vx,t)$ & hydrodynamic pressure perturbation & \si{\pascal}\\
+\end{symbols}
 
 \section{Why we do not start in 3D}
 

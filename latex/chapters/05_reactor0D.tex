@@ -27,6 +27,18 @@ using $\dd h_k/\dd T=c_{p,k}$ and $\sum_kY_kc_{p,k}=c_p$. Therefore
 ($h_kW_k=\hat h_k$ converts per-kg to per-kmol.) The density follows from the ideal gas law at
 fixed $p$; the volume expands as the gas heats.
 \end{derivation}
+\begin{symbols}
+$m$, $V$ & mass and volume of the reactor contents & \si{\kilo\gram}, \si{\metre\cubed}\\
+$Y_k$ & mass fraction of species $k$ & \nodim\\
+$W_k$ & molar mass of $k$ & \si{\kilo\gram\per\kilo\mole}\\
+$\wdot_k$ & net molar production rate of $k$ & \si{\kilo\mole\per\metre\cubed\per\second}\\
+$\rho$ & density & \si{\kilo\gram\per\metre\cubed}\\
+$h$, $h_k$ & specific enthalpy of the mixture, of species $k$ & \si{\joule\per\kilo\gram}\\
+$\hat h_k=h_kW_k$ & molar enthalpy of $k$ & \si{\joule\per\kilo\mole}\\
+$c_p$, $c_{p,k}$ & specific heat capacity of mixture, of species $k$ & \si{\joule\per\kilo\gram\per\kelvin}\\
+$\dot q$ & heat release rate & \si{\watt\per\metre\cubed}\\
+$T$, $t$ & temperature, time & \si{\kelvin}, \si{\second}\\
+\end{symbols}
 
 \begin{intuition}
 Read \eqref{eq:0dT} as: temperature rises at the rate heat is released divided by the heat
@@ -81,6 +93,12 @@ heat in a flame) with a chemical time $\tau_{\rm chem}$ (e.g.\ $\tau_{ign}$):
 \begin{equation}
   \mathrm{Da}=\frac{\tau_{\rm flow}}{\tau_{\rm chem}} .
 \end{equation}
+
+\begin{symbols}
+$\tau_{\rm flow}$ & flow (residence or mixing) time & \si{\second}\\
+$\tau_{\rm chem}$ & chemical time (e.g.\ ignition delay) & \si{\second}\\
+$\mathrm{Da}$ & Damköhler number & \nodim\\
+\end{symbols}
 \begin{itemize}
   \item $\mathrm{Da}\gg1$: chemistry finishes; the state is close to equilibrium.
   \item $\mathrm{Da}\ll1$: chemistry has no time; composition is \emph{frozen}. This is how CO and

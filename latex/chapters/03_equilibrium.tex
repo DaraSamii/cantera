@@ -19,6 +19,14 @@ At constant $T$ this is $\dd(H-TS)=\dd G\le0$. Any spontaneous change at fixed $
   \text{equilibrium at fixed }(T,p):\qquad G=\sum_k n_k\mu_k=\text{minimum}.
 \end{equation}
 \end{derivation}
+\begin{symbols}
+$S$ & entropy of the system & \si{\joule\per\kelvin}\\
+$\delta Q$ & heat received from the surroundings & \si{\joule}\\
+$H$, $G=H-TS$ & enthalpy, Gibbs free energy of the system & \si{\joule}\\
+$T$, $p$ & temperature, pressure (held fixed) & \si{\kelvin}, \si{\pascal}\\
+$n_k$ & amount of species $k$ & \si{\kilo\mole}\\
+$\mu_k$ & chemical potential of $k$ (molar Gibbs energy in the mixture) & \si{\joule\per\kilo\mole}\\
+\end{symbols}
 
 \begin{intuition}[a tug of war]
 $G=H-TS$. The $H$ term wants strongly bonded, low-energy molecules (\ce{H_2O}). The $-TS$
@@ -56,6 +64,16 @@ Separating the pressure, with $\Delta\nu=\sum_k\nu_k$ (change in number of moles
   \label{eq:KX}
 \end{equation}
 \end{derivation}
+\begin{symbols}
+$\nu'_k$, $\nu''_k$, $\nu_k$ & stoichiometric coefficients of $k$ as reactant, as product, net $\nu''_k-\nu'_k$ & \nodim\\
+$\xi$ & extent of reaction & \si{\kilo\mole}\\
+$\mu_k$ & chemical potential & \si{\joule\per\kilo\mole}\\
+$\hat g_k^\circ(T)$ & standard-state molar Gibbs energy of $k$ & \si{\joule\per\kilo\mole}\\
+$\Delta G^\circ=\sum_k\nu_k\hat g_k^\circ$ & standard Gibbs energy change per kmol of reaction & \si{\joule\per\kilo\mole}\\
+$K_p(T)$ & equilibrium constant (pressure-based) & \nodim\\
+$\Delta\nu=\sum_k\nu_k$ & change in number of moles per unit reaction & \nodim\\
+$X_k$, $p$, $p^\circ$ & mole fraction, pressure, standard pressure & --, \si{\pascal}, \si{\pascal}\\
+\end{symbols}
 
 \begin{keypoint}
 $K_p$ depends \textbf{only on temperature} and is computed from tabulated $\hat g^\circ_k$
@@ -99,6 +117,12 @@ $\partial(\hat g^\circ/T)/\partial T=-\hat h^\circ/T^2$ gives the \textbf{van~'t
 \begin{equation}
   \od{\ln K_p}{T}=\frac{\Delta H^\circ}{\Ru T^2}.
 \end{equation}
+
+\begin{symbols}
+$K_p$ & equilibrium constant & \nodim\\
+$\Delta H^\circ$ & standard enthalpy of reaction per kmol of reaction & \si{\joule\per\kilo\mole}\\
+$\Ru$, $T$ & gas constant, temperature & 8314.46 \si{\joule\per\kilo\mole\per\kelvin}, \si{\kelvin}\\
+\end{symbols}
 Dissociation is endothermic ($\Delta H^\circ>0$: breaking bonds costs energy), so $K_p$ grows with
 $T$. \emph{Higher temperature promotes dissociation.}
 
@@ -137,6 +161,13 @@ H/O/N), found together with $\sum_kX_k=1$ and the element balances. Each $\lambd
 potential of one atom of element $j$. This is what Cantera's default equilibrium solver does,
 and it is why adding species to a mechanism does not make equilibrium much harder.
 \end{derivation}
+\begin{symbols}
+$a_{jk}$ & number of atoms of element $j$ in one molecule of species $k$ & \nodim\\
+$b_j$ & total amount of element $j$ in the system (fixed) & \si{\kilo\mole}\\
+$\lambda_j$ & Lagrange multiplier = chemical potential of element $j$ & \si{\joule\per\kilo\mole}\\
+$J$ & number of elements (3 for H/O/N) & \nodim\\
+$\hat g_k^\circ$, $X_k$, $p$, $p^\circ$ & as in the previous derivation & \si{\joule\per\kilo\mole}, --, \si{\pascal}\\
+\end{symbols}
 
 \section{Which quantity is held fixed?}
 
@@ -174,11 +205,23 @@ For a hydrocarbon \ce{C_xH_y} burning completely in air (\ce{O_2} + 3.76 \ce{N_2
 where the oxygen atom balance gives $2a=2x+y/2$, i.e.\ $a=x+y/4$. For \ce{CH_4}, $a=2$; for
 \ce{H_2} ($x=0,y=2$), $a=\tfrac12$.
 \end{derivation}
+\begin{symbols}
+$x$, $y$ & number of C and H atoms in the fuel \ce{C_xH_y} & \nodim\\
+$a=x+y/4$ & kmol of \ce{O_2} needed per kmol of fuel & \nodim\\
+$3.76$ & kmol of \ce{N_2} accompanying each kmol of \ce{O_2} in air & \nodim\\
+\end{symbols}
 
 The \textbf{equivalence ratio} compares the actual fuel/oxidiser ratio with the stoichiometric one:
 \begin{equation}
   \phi=\frac{(n_F/n_{O_2})}{(n_F/n_{O_2})_{\rm st}}=\frac{(Y_F/Y_{O_2})}{(Y_F/Y_{O_2})_{\rm st}} .
 \end{equation}
+
+\begin{symbols}
+$\phi$ & equivalence ratio & \nodim\\
+$n_F$, $n_{O_2}$ & amounts of fuel and oxygen & \si{\kilo\mole}\\
+$Y_F$, $Y_{O_2}$ & mass fractions of fuel and oxygen & \nodim\\
+$(\cdot)_{\rm st}$ & value at stoichiometric conditions & --\\
+\end{symbols}
 It is the same whether you use moles or masses, because the molar-mass factor cancels.
 $\phi<1$ is \textbf{lean} (excess air), $\phi>1$ is \textbf{rich} (excess fuel). For \ce{H_2}/air
 at equivalence ratio $\phi$, the reactant mixture is $\phi\,\ce{H_2}+\tfrac12(\ce{O_2}+3.76\ce{N_2})$.
@@ -198,6 +241,12 @@ temperature}:
   h_{\rm products}(\Tad)=h_{\rm reactants}(T_u),\qquad p=\text{const}.
   \label{eq:Tad}
 \end{equation}
+
+\begin{symbols}
+$h_{\rm reactants}$, $h_{\rm products}$ & specific enthalpy of the mixture before and after combustion & \si{\joule\per\kilo\gram}\\
+$T_u$ & unburnt (reactant) temperature & \si{\kelvin}\\
+$\Tad$ & adiabatic flame temperature & \si{\kelvin}\\
+\end{symbols}
 
 \begin{figure}[H]
 \centering
@@ -282,6 +331,14 @@ Lean: the numerator falls linearly. Rich: the numerator is fixed and the denomin
 So $\Tad$ falls off faster on the lean side. How much slower the rich side falls depends on how
 much heat capacity each extra kmol of fuel brings, which depends on the fuel.
 \end{derivation}
+\begin{symbols}
+$Q$ & heat released per kmol of fuel burnt & \si{\joule\per\kilo\mole}\\
+$a$ & stoichiometric kmol \ce{O_2} per kmol fuel & \nodim\\
+$\phi$ & equivalence ratio & \nodim\\
+$n_{\rm mix}$, $n_{\rm mix,st}$ & kmol of product mixture per kmol of \ce{O_2} (general, stoichiometric) & \nodim\\
+$\bar c_p$ & average molar heat capacity of the products & \si{\joule\per\kilo\mole\per\kelvin}\\
+$\Tad$, $T_u$ & adiabatic flame temperature, unburnt temperature & \si{\kelvin}\\
+\end{symbols}
 
 \begin{intuition}[why the peak is slightly rich]
 Two effects, both absent in the complete-combustion curve of \figref{fig:tadphi}:
@@ -312,6 +369,13 @@ Since the hot, triatomic-rich products have the larger $c_p$, this ratio is belo
 dissociation it is lower still: the extra enthalpy pushes $\Tad$ up, which increases
 dissociation, which absorbs part of that enthalpy.
 \end{derivation}
+\begin{symbols}
+$\bar c_{p,u}$, $\bar c_{p,b}$ & average specific heat capacity of reactants, of products & \si{\joule\per\kilo\gram\per\kelvin}\\
+$Q_m$ & heat released per kg of mixture & \si{\joule\per\kilo\gram}\\
+$T^\circ$ & reference temperature, 298.15 & \si{\kelvin}\\
+$T_u$, $\Tad$ & unburnt temperature, adiabatic flame temperature & \si{\kelvin}\\
+$\partial\Tad/\partial T_u$ & gain in flame temperature per kelvin of preheat & \nodim\\
+\end{symbols}
 
 \subsection{Pressure}
 Pressure does not enter \eqref{eq:Tad} for an ideal gas: $h$ does not depend on $p$.

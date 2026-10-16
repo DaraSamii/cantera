@@ -7,6 +7,7 @@
 \usepackage{siunitx}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{array}
 \usepackage{enumitem}
 \usepackage{caption,subcaption}
 \usepackage{float}
@@ -62,6 +63,16 @@
   fonttitle=\bfseries,title={Worked example\ifx&#1&\else: #1\fi},arc=2pt}
 \newtcolorbox{selfcheck}{enhanced,breakable,colback=yellow!6,colframe=yellow!50!black,
   fonttitle=\bfseries,title={Check your understanding},arc=2pt}
+
+% symbols table that follows every derivation: rows are  symbol & meaning & SI unit \\
+\newtcolorbox{symbolbox}{enhanced,breakable,colback=white,colframe=derv!45,
+  colbacktitle=derv!10,coltitle=derv!60!black,fonttitle=\bfseries\small,
+  title={Symbols and units},arc=2pt,boxrule=0.5pt,left=4pt,right=4pt,top=2pt,bottom=2pt}
+\newenvironment{symbols}
+  {\begin{symbolbox}\small\renewcommand{\arraystretch}{1.12}%
+   \begin{tabular}{@{}p{0.2\linewidth}p{0.5\linewidth}>{\raggedright\arraybackslash}p{0.22\linewidth}@{}}}
+  {\end{tabular}\end{symbolbox}}
+\newcommand{\nodim}{-- (dimensionless)}
 
 % ------------------------------------------------------------------ code
 \lstdefinestyle{py}{language=Python,basicstyle=\ttfamily\small,

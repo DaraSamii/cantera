@@ -70,6 +70,13 @@ Adding the $y$ and $z$ contributions and dividing by $\Delta V$:
   \frac{\text{net outflow}}{\Delta V} = \pd{F_x}{x}+\pd{F_y}{y}+\pd{F_z}{z}\equiv \divg\bm F .
 \end{equation}
 \end{derivation}
+\begin{symbols}
+$\bm F=(F_x,F_y,F_z)$ & flux vector: amount of some quantity crossing unit area per unit time & e.g.\ \si{\watt\per\metre\squared} (heat), \si{\kilo\gram\per\metre\squared\per\second} (mass)\\
+$\Delta x,\Delta y,\Delta z$ & side lengths of the small box & \si{\metre}\\
+$\Delta V$ & volume of the box, $\Delta x\Delta y\Delta z$ & \si{\metre\cubed}\\
+$\partial F_x/\partial x$ & how fast $F_x$ changes with $x$ & unit of $F$ per \si{\metre}\\
+$\divg\bm F$ & divergence: net outflow per unit volume (per unit time) & unit of $F$ per \si{\metre}\\
+\end{symbols}
 
 \begin{keypoint}[Gauss divergence theorem]
 For any volume $V$ with closed surface $S$ and outward normal $\vn$,
@@ -121,6 +128,15 @@ integrands must balance pointwise:
 \label{eq:generic}
 \end{equation}
 
+\begin{symbols}
+$\varphi$ & transported quantity per kg (1 for mass, $Y_k$, $\vu$, $h$, \dots) & unit of $\varphi$\\
+$\rho\varphi$ & amount of that quantity per unit volume & unit of $\varphi$ $\times$ \si{\kilo\gram\per\metre\cubed}\\
+$\vu$ & flow velocity & \si{\metre\per\second}\\
+$\bm J_\varphi$ & diffusive flux of $\varphi$ & unit of $\rho\varphi$ $\times$ \si{\metre\per\second}\\
+$S_\varphi$ & source: amount created per unit volume and time & unit of $\rho\varphi$ per \si{\second}\\
+$V$, $S$, $\vn$ & control volume, its surface, outward unit normal & \si{\metre\cubed}, \si{\metre\squared}, --\\
+\end{symbols}
+
 \begin{keypoint}
 Reading any transport equation: \textbf{unsteady} + \textbf{convection} = \textbf{diffusion} + \textbf{source}.
 Chapter~\ref{ch:governing} fills in $\bm J_\varphi$ and $S_\varphi$ for mass, species, momentum and
@@ -142,6 +158,12 @@ $\partial\rho/\partial t+\divg(\rho\vu)=0$ gives the useful identity
   \pd{(\rho\varphi)}{t} + \divg(\rho\vu\varphi) = \rho\Dt{\varphi}.
   \label{eq:matderiv}
 \end{equation}
+
+\begin{symbols}
+$\mathrm D\varphi/\mathrm Dt$ & rate of change seen while moving with the fluid & unit of $\varphi$ per \si{\second}\\
+$\partial\varphi/\partial t$ & rate of change at a fixed point & unit of $\varphi$ per \si{\second}\\
+$\vu\cdot\nabla\varphi$ & change due to moving to where $\varphi$ differs & unit of $\varphi$ per \si{\second}\\
+\end{symbols}
 (Expand the product rule: $\varphi[\partial_t\rho+\divg(\rho\vu)] + \rho[\partial_t\varphi+\vu\cdot\nabla\varphi]$; the first bracket is zero.)
 
 \section{Ordinary differential equations and stiffness}
@@ -174,6 +196,13 @@ point), linearise around a guess: $\bm F(\bm y+\delta\bm y)\approx\bm F(\bm y)+\
 with Jacobian $\mathsf J_{ab}=\partial F_a/\partial y_b$. Solve $\mathsf J\delta\bm y=-\bm F$ and
 update. Convergence is very fast \emph{if} the starting guess is close; otherwise it diverges.
 
+\begin{symbols}
+$\bm y$ & vector of all unknowns ($T$, $Y_k$, $u$, \dots at every grid point) & mixed\\
+$\bm F(\bm y)$ & residuals of the discretised equations (zero at the solution) & mixed\\
+$\mathsf J$ & Jacobian matrix $\partial F_a/\partial y_b$ & mixed\\
+$\delta\bm y$ & Newton correction & as $\bm y$\\
+\end{symbols}
+
 \begin{intuition}
 This is why Cantera's 1D solver alternates Newton iterations with a few pseudo-time steps (which
 are robust but slow) and why, for parameter sweeps, you should start each new flame from the
@@ -190,6 +219,13 @@ $\mathcal L=f-\sum_j\lambda_j g_j$ and set $\partial\mathcal L/\partial x_k=0$:
   \pd{f}{x_k}=\sum_j\lambda_j\pd{g_j}{x_k}.
 \end{equation}
 
+\begin{symbols}
+$f(\bm x)$ & function to minimise (later: Gibbs energy $G$) & e.g.\ \si{\joule}\\
+$x_k$ & variables (later: amounts $n_k$) & e.g.\ \si{\kilo\mole}\\
+$g_j(\bm x)=0$ & constraints (later: element conservation) & e.g.\ \si{\kilo\mole}\\
+$\lambda_j$ & Lagrange multipliers & unit of $f$ / unit of $g_j$\\
+\end{symbols}
+
 \begin{intuition}
 At a constrained minimum you cannot go further downhill without leaving the allowed surface, so
 the downhill direction $-\nabla f$ must be perpendicular to that surface, i.e.\ a combination
@@ -203,6 +239,13 @@ Reaction rates behave like $k=Ae^{-E/(\Ru T)}$. Taking logarithms,
 \begin{equation}
   \ln k = \ln A - \frac{E}{\Ru}\,\frac1T,
 \end{equation}
+
+\begin{symbols}
+$k$ & rate constant & depends on order\\
+$A$ & pre-exponential factor & same as $k$\\
+$E$ & activation energy & \si{\joule\per\kilo\mole}\\
+$\Ru$, $T$ & universal gas constant, temperature & 8314.46 \si{\joule\per\kilo\mole\per\kelvin}, \si{\kelvin}\\
+\end{symbols}
 a straight line in $(1/T,\ln k)$ with slope $-E/\Ru$. That is why kinetics plots use $1000/T$ on
 the $x$-axis and a log $y$-axis (\figref{fig:arrh}). Curvature in such a plot signals that more than
 one process is competing.
@@ -221,6 +264,12 @@ extinction abrupt.
   \operatorname{erf}(\eta)=\frac{2}{\sqrt\pi}\int_0^\eta e^{-s^2}\dd s,\qquad
   \operatorname{erfc}(\eta)=1-\operatorname{erf}(\eta).
 \end{equation}
+
+\begin{symbols}
+$\eta$ & argument (later $x/\ell$) & \nodim\\
+$s$ & integration variable & \nodim\\
+$c$, $D$, $t$ & concentration, diffusivity, time in the example & \si{\kilo\mole\per\metre\cubed}, \si{\metre\squared\per\second}, \si{\second}\\
+\end{symbols}
 erf rises smoothly from $-1$ to $1$; it is the shape of a diffusion front, e.g.\ the solution of
 $\partial_t c=D\partial_{xx}c$ with a step initial condition is
 $c=\tfrac12\operatorname{erfc}(x/\sqrt{4Dt})$. We will meet it as the shape of the mixture

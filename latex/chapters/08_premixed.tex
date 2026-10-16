@@ -54,6 +54,15 @@ p_u-p_b=\dot m\,(u_b-u_u)=\rho_u\SL^2\Big(\frac{\rho_u}{\rho_b}-1\Big)\approx 1.
 The pressure drop is negligible compared with \SI{101325}{\pascal}, which justifies the low-Mach
 approximation (\secref{sec:lowmach}).
 \end{derivation}
+\begin{symbols}
+$\dot m=\rho u$ & mass flux through the flame & \si{\kilo\gram\per\metre\squared\per\second}\\
+$\rho_u$, $\rho_b$ & density of unburnt, burnt gas & \si{\kilo\gram\per\metre\cubed}\\
+$\SL$ & laminar flame speed (= $u_u$ in the flame frame) & \si{\metre\per\second}\\
+$u_b$ & burnt-gas velocity & \si{\metre\per\second}\\
+$T_u$, $T_b$ & unburnt, burnt temperature & \si{\kelvin}\\
+$W_u$, $W_b$ & mean molar mass of unburnt, burnt gas & \si{\kilo\gram\per\kilo\mole}\\
+$p_u$, $p_b$ & pressure upstream, downstream & \si{\pascal}\\
+\end{symbols}
 
 \section{The 1D flame equations}
 \label{sec:1deqs}
@@ -63,6 +72,16 @@ Steady, 1D, low-Mach versions of \eqref{eq:species} and \eqref{eq:temperature}, 
   \dot m\od{Y_k}{x}&=-\od{j_k}{x}+W_k\wdot_k ,\label{eq:1dY}\\
   \dot m\,c_p\od{T}{x}&=\od{}{x}\Big(\lambda\od{T}{x}\Big)-\Big(\sum_kj_kc_{p,k}\Big)\od{T}{x}-\sum_kh_kW_k\wdot_k .\label{eq:1dT}
 \end{align}
+
+\begin{symbols}
+$\dot m$ & constant mass flux $\rho u$ (eigenvalue) & \si{\kilo\gram\per\metre\squared\per\second}\\
+$Y_k$, $j_k$ & mass fraction, diffusive mass flux of $k$ & --, \si{\kilo\gram\per\metre\squared\per\second}\\
+$W_k\wdot_k$ & chemical mass production rate & \si{\kilo\gram\per\metre\cubed\per\second}\\
+$c_p$, $c_{p,k}$ & specific heat capacity of mixture, of $k$ & \si{\joule\per\kilo\gram\per\kelvin}\\
+$\lambda$ & thermal conductivity & \si{\watt\per\metre\per\kelvin}\\
+$h_k$ & specific enthalpy of $k$ & \si{\joule\per\kilo\gram}\\
+$x$ & position & \si{\metre}\\
+\end{symbols}
 Boundary conditions: fresh state ($T_u$, $Y_{k,u}$) far upstream and zero gradients far downstream.
 
 \begin{keypoint}[$\SL$ is an eigenvalue]
@@ -87,6 +106,12 @@ gives equal elemental composition at both ends. Far downstream the gas is also n
 changing, i.e.\ it is at chemical equilibrium. A state with the same $h$, $p$ and elements that is at
 equilibrium is precisely \code{equilibrate("HP")} of the fresh gas.
 \end{derivation}
+\begin{symbols}
+$h$, $h_u$, $h_b$ & specific enthalpy (local, unburnt, burnt) & \si{\joule\per\kilo\gram}\\
+$q$ & total heat flux $-\lambda\,\dd T/\dd x+\sum_kh_kj_k$ & \si{\watt\per\metre\squared}\\
+$\dot m$ & mass flux & \si{\kilo\gram\per\metre\squared\per\second}\\
+$j_k$ & diffusive mass flux of $k$ & \si{\kilo\gram\per\metre\squared\per\second}\\
+\end{symbols}
 
 \begin{warning}[why the end of your domain is \emph{not} that state]
 Recombination of radicals and, for hydrocarbons, oxidation of CO are slow. In a domain a few
@@ -132,6 +157,13 @@ $-\infty$ is
 where $T_r$ is the temperature where reaction starts. The e-folding length is the
 \textbf{diffusive flame thickness} $\delta_d=\alpha_u/\SL$.
 \end{derivation}
+\begin{symbols}
+$T_r$ & temperature at which reaction starts & \si{\kelvin}\\
+$\alpha_u$ & thermal diffusivity of the unburnt gas & \si{\metre\squared\per\second}\\
+$\SL$ & flame speed & \si{\metre\per\second}\\
+$\delta_d=\alpha_u/\SL$ & diffusive flame thickness & \si{\metre}\\
+$x$ & position (reaction zone near $x=0$) & \si{\metre}\\
+\end{symbols}
 
 \begin{figure}[H]
 \centering
@@ -163,6 +195,14 @@ $\delta^2\sim\alpha\tau_c$ with chemical time $\tau_c=\rho c_p\Delta T/\dot q$. 
   \label{eq:SLscaling}
 \end{equation}
 \end{derivation}
+\begin{symbols}
+$\delta$ & flame thickness & \si{\metre}\\
+$\Delta T=T_b-T_u$ & temperature rise across the flame & \si{\kelvin}\\
+$\dot q$ & typical heat release rate & \si{\watt\per\metre\cubed}\\
+$\tau_c=\rho c_p\Delta T/\dot q$ & chemical time scale & \si{\second}\\
+$\alpha$, $\lambda$ & thermal diffusivity, conductivity & \si{\metre\squared\per\second}, \si{\watt\per\metre\per\kelvin}\\
+$\SL\delta/\alpha$ & flame Péclet number & \nodim\\
+\end{symbols}
 
 \begin{intuition}
 A flame is as thick as heat can diffuse in one chemical time, and travels one thickness per
@@ -181,6 +221,12 @@ The flame speed follows the burnt temperature, exponentially. Anything that rais
 \textbf{Zeldovich number} $\beta=E(T_b-T_u)/(\Ru T_b^2)\approx8$--$12$ measures this sensitivity.
 The reaction zone is thinner than the flame by a factor $\sim\beta$.
 
+\begin{symbols}
+$E$ & global activation energy & \si{\joule\per\kilo\mole}\\
+$T_b$, $T_u$ & burnt, unburnt temperature & \si{\kelvin}\\
+$\beta$ & Zeldovich number & \nodim\\
+\end{symbols}
+
 \paragraph{Pressure dependence.}
 \begin{derivation}[$\SL\propto p^{n/2-1}$]
 From \chapref{ch:transport}, $\alpha\propto1/p$. For a global reaction of overall order $n$
@@ -194,6 +240,13 @@ For a bimolecular reaction ($n=2$), $\SL$ would be pressure-independent. Measure
 which lowers the effective order below 2. Note also that $\SL\delta\propto\alpha\propto1/p$: the
 product is \emph{not} constant with pressure, but the Péclet number $\SL\delta/\alpha_u$ is.
 \end{derivation}
+\begin{symbols}
+$n$ & overall reaction order & \nodim\\
+$p$ & pressure & \si{\pascal}\\
+$\alpha\propto1/p$ & thermal diffusivity & \si{\metre\squared\per\second}\\
+$\tau_c\propto p^{1-n}$ & chemical time & \si{\second}\\
+$\SL$, $\delta$ & flame speed, thickness & \si{\metre\per\second}, \si{\metre}\\
+\end{symbols}
 
 \paragraph{Preheat.} Raising $T_u$ raises $T_b$ (\secref{sec:Tad}) and $\alpha$. Empirically
 $\SL\propto T_u^m$ with $m\approx1.5$--$2$ for hydrocarbons. A common correlation is
@@ -206,6 +259,12 @@ $\SL=\SL^0(T_u/T_0)^{m}(p/p_0)^{n_p}$, fitted separately for each $\phi$.
         \begin{equation}
           \delta_L=\frac{T_b-T_u}{\max|\dd T/\dd x|} .
         \end{equation}
+
+\begin{symbols}
+$\delta_L$ & thermal flame thickness & \si{\metre}\\
+$\max|\dd T/\dd x|$ & steepest temperature gradient & \si{\kelvin\per\metre}\\
+$T_b$, $T_u$ & burnt, unburnt temperature & \si{\kelvin}\\
+\end{symbols}
         Robust and easy to measure: draw the tangent at the steepest point.
   \item \textbf{Diffusive thickness} $\delta_d=\alpha_u/\SL$. It is much smaller (5--7$\times$,
         \figref{fig:SLphi}), because $\alpha$ is evaluated in the cold gas while the gradient sits where the gas
@@ -239,6 +298,12 @@ ends:
 S_c=\frac{-\int W_F\wdot_F\,\dd x}{\rho_u\,(Y_{F,u}-Y_{F,b})}.
 \]
 \end{derivation}
+\begin{symbols}
+$S_c$ & consumption speed & \si{\metre\per\second}\\
+$Y_{F,u}$, $Y_{F,b}$ & fuel mass fraction in unburnt, burnt gas & \nodim\\
+$W_F\wdot_F$ & fuel mass production rate (negative: consumption) & \si{\kilo\gram\per\metre\cubed\per\second}\\
+$\dot m$, $\rho_u$ & mass flux, unburnt density & \si{\kilo\gram\per\metre\squared\per\second}, \si{\kilo\gram\per\metre\cubed}\\
+\end{symbols}
 \begin{itemize}
   \item \textbf{Displacement speed} $S_u$: the velocity of the fresh gas relative to the flame front
         (\code{flame.velocity[0]} in a free flame). Depends on the frame and on stretch.

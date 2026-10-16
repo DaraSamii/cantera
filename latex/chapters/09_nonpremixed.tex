@@ -63,6 +63,16 @@ that it is 1 in the fuel stream (1) and 0 in the oxidiser stream (2):
 $Z$ is the mass fraction of material that originated in the fuel stream. It is conserved
 (convected and diffused but never created or destroyed), no matter how the chemistry proceeds.
 \end{derivation}
+\begin{symbols}
+$s$ & stoichiometric oxygen-to-fuel mass ratio (kg O per kg F) & \nodim\\
+$Y_F$, $Y_O$ & fuel, oxidiser mass fraction & \nodim\\
+$D$ & common diffusivity & \si{\metre\squared\per\second}\\
+$\mathcal L(\cdot)$ & transport operator (unsteady + convection $-$ diffusion) & \si{\kilo\gram\per\metre\cubed\per\second} $\times$ unit of argument\\
+$W_F\wdot_F$ & fuel mass production rate & \si{\kilo\gram\per\metre\cubed\per\second}\\
+$\beta=sY_F-Y_O$ & coupling function (conserved) & \nodim\\
+$Y_{F,1}$, $Y_{O,2}$ & fuel mass fraction in stream 1 (fuel), oxygen in stream 2 (oxidiser) & \nodim\\
+$Z$ & mixture fraction & \nodim\\
+\end{symbols}
 
 \begin{derivation}[stoichiometric mixture fraction]
 Stoichiometric means fuel and oxygen in exactly the ratio $1:s$, i.e.\ $sY_F=Y_O$. Then $\beta=0$ and
@@ -73,6 +83,12 @@ Stoichiometric means fuel and oxygen in exactly the ratio $1:s$, i.e.\ $sY_F=Y_O
 \textbf{Methane/air:} $\ce{CH_4}+2\ce{O_2}$, so $s=2\cdot32/16=4$; $Y_{F,1}=1$, $Y_{O,2}=0.233$:
 $\Zst=1/(1+4/0.233)=0.055$. This matches Cantera's \code{gas.mixture\_fraction(...)} ($0.0552$).
 \end{derivation}
+\begin{symbols}
+$\Zst$ & stoichiometric mixture fraction & \nodim\\
+$s$ & stoichiometric O-to-F mass ratio, $\nu_{O_2}W_{O_2}/W_F$ & \nodim\\
+$Y_{F,1}$, $Y_{O,2}$ & fuel in fuel stream, oxygen in air ($0.233$) & \nodim\\
+32, 16 & molar masses of \ce{O_2} and \ce{CH_4} & \si{\kilo\gram\per\kilo\mole}\\
+\end{symbols}
 
 \begin{warning}[$\Zst$ formula with air]
 If you see $\Zst=1/(1+\nu W_F/W_{O_2})$-type expressions, check what $\nu$ means and whether the
@@ -87,6 +103,12 @@ species. Bilger defines $Z$ from \emph{element} mass fractions, which only diffu
   Z=\frac{\beta-\beta_2}{\beta_1-\beta_2},\qquad
   \beta=2\frac{Y_C}{W_C}+\frac12\frac{Y_H}{W_H}-\frac{Y_O}{W_O},
 \end{equation}
+
+\begin{symbols}
+$Y_C$, $Y_H$, $Y_O$ & elemental mass fractions of C, H, O & \nodim\\
+$W_C$, $W_H$, $W_O$ & atomic molar masses (12, 1.008, 16) & \si{\kilo\gram\per\kilo\mole}\\
+$\beta$, $\beta_1$, $\beta_2$ & Bilger coupling function (local, fuel stream, oxidiser stream) & \si{\kilo\mole\per\kilo\gram}\\
+\end{symbols}
 where the coefficients count how much oxygen each element needs. Cantera:
 \code{gas.mixture\_fraction(fuel, oxidizer, element="Bilger")} or
 \code{flame.mixture\_fraction("Bilger")}.
@@ -100,6 +122,11 @@ equivalence ratio is $\phi=(Y_F/Y_O)/(Y_F/Y_O)_{\rm st}$, so
 Every point in a non-premixed flame is a premixed mixture of some local $\phi$, from $0$ (air)
 to $\infty$ (pure fuel).
 \end{derivation}
+\begin{symbols}
+$\phi$ & local equivalence ratio of the unreacted mixture & \nodim\\
+$Z$, $\Zst$ & mixture fraction, stoichiometric value & \nodim\\
+$Y_F$, $Y_O$ & fuel, oxygen mass fraction before reaction & \nodim\\
+\end{symbols}
 
 \section{Infinitely fast chemistry: Burke--Schumann}
 \label{sec:BS}
@@ -113,6 +140,13 @@ are then linear in $Z$ on each side:
   Z\ge\Zst:&\quad Y_O=0,\quad Y_F=Y_{F,1}\frac{Z-\Zst}{1-\Zst},\quad
   T=T_2+Z(T_1-T_2)+\frac{QY_{F,1}}{c_p}\Zst\frac{1-Z}{1-\Zst}.
 \end{align}
+
+\begin{symbols}
+$Q$ & heat of combustion per kg of fuel & \si{\joule\per\kilo\gram}\\
+$c_p$ & specific heat capacity (assumed constant) & \si{\joule\per\kilo\gram\per\kelvin}\\
+$T_1$, $T_2$ & fuel-stream, oxidiser-stream temperatures & \si{\kelvin}\\
+$Y_F$, $Y_O$, $Z$ & fuel and oxidiser mass fractions, mixture fraction & \nodim\\
+\end{symbols}
 
 \begin{figure}[H]
 \centering
@@ -182,6 +216,11 @@ Near the stagnation plane, the inviscid axisymmetric flow is $u=-ax$ (axial), $v
 $\partial_xu+\tfrac1r\partial_r(rv)=-a+a=0$. The constant $a$ [1/s] is the \textbf{strain rate}: the
 rate at which fluid elements are stretched along $r$ and compressed along $x$.
 \end{derivation}
+\begin{symbols}
+$u$, $v$ & axial, radial velocity & \si{\metre\per\second}\\
+$x$, $r$ & axial, radial coordinate & \si{\metre}\\
+$a$ & strain rate & \si{\per\second}\\
+\end{symbols}
 
 \begin{derivation}[similarity reduction solved by Cantera]
 Assume $u=u(x)$, $v=r\,V(x)$, $T=T(x)$, $Y_k=Y_k(x)$ and $\partial p/\partial r=r\Lambda$ with
@@ -196,6 +235,14 @@ These are Cantera's components \code{velocity} ($u$), \code{spreadRate} ($V$), \
 \code{T} and the species. The inlet mass fluxes $\dot m_F$, $\dot m_O$ are the controls; the
 eigenvalue $\Lambda$ adjusts to fit both nozzles in the domain.
 \end{derivation}
+\begin{symbols}
+$V=v/r$ & radial velocity gradient (Cantera \code{spreadRate}) & \si{\per\second}\\
+$\Lambda$ & radial pressure curvature $(1/r)\partial p/\partial r$, an eigenvalue & \si{\pascal\per\metre\squared}\\
+$\mu$ & dynamic viscosity & \si{\pascal\second}\\
+$\rho u$ & axial mass flux & \si{\kilo\gram\per\metre\squared\per\second}\\
+$j_k$, $W_k\wdot_k$ & diffusive mass flux, chemical mass source of $k$ & \si{\kilo\gram\per\metre\squared\per\second}, \si{\kilo\gram\per\metre\cubed\per\second}\\
+$c_p$, $\lambda$ & heat capacity, conductivity & \si{\joule\per\kilo\gram\per\kelvin}, \si{\watt\per\metre\per\kelvin}\\
+\end{symbols}
 
 \begin{derivation}[choosing inlet flows for a target strain]
 For potential flow between nozzles a distance $L$ apart, Seshadri \& Williams give the strain rate on
@@ -211,6 +258,13 @@ plane. Then $|u_F|/|u_O|=\sqrt{\rho_O/\rho_F}$, the bracket equals 2, and
 This is an estimate. Always report the strain the solver actually produced
 (\code{flame.strain\_rate("max")}, or $\chist$ computed from the solution).
 \end{derivation}
+\begin{symbols}
+$a_O$ & strain rate on the oxidiser side & \si{\per\second}\\
+$u_O$, $u_F$ & oxidiser, fuel inlet velocities & \si{\metre\per\second}\\
+$\rho_O$, $\rho_F$ & oxidiser, fuel inlet densities & \si{\kilo\gram\per\metre\cubed}\\
+$L$ & nozzle separation (Cantera \code{width}) & \si{\metre}\\
+$\dot m_O$, $\dot m_F$ & inlet mass fluxes (\code{mdot}) & \si{\kilo\gram\per\metre\squared\per\second}\\
+\end{symbols}
 
 \section{Scalar dissipation rate}
 \label{sec:chi-erf}
@@ -218,6 +272,12 @@ This is an estimate. Always report the strain the solver actually produced
 \begin{equation}
   \chi=2D|\nabla Z|^2\qquad[\si{\per\second}] .
 \end{equation}
+
+\begin{symbols}
+$\chi$ & scalar dissipation rate & \si{\per\second}\\
+$D$ & diffusivity of the mixture fraction (often $\approx\alpha$) & \si{\metre\squared\per\second}\\
+$\nabla Z$ & mixture-fraction gradient & \si{\per\metre}\\
+\end{symbols}
 
 \begin{intuition}
 $\chi$ is the rate at which molecular diffusion destroys fluctuations of $Z$, i.e.\ how fast fuel
@@ -245,6 +305,15 @@ $\eta=\operatorname{erfc}^{-1}(2Z)=\operatorname{erf}^{-1}(1-2Z)$:
   \label{eq:chiZ}
 \end{equation}
 \end{derivation}
+\begin{symbols}
+$Z'$ & $\dd Z/\dd x$ & \si{\per\metre}\\
+$C$ & integration constant & \si{\per\metre}\\
+$\ell=\sqrt{2D/a}$ & mixing-layer thickness & \si{\metre}\\
+$\eta=x/\ell$ & similarity variable & \nodim\\
+$\chi$, $\chist$ & scalar dissipation rate, its value at $\Zst$ & \si{\per\second}\\
+$a$, $D$ & strain rate, diffusivity & \si{\per\second}, \si{\metre\squared\per\second}\\
+$\operatorname{erf}^{-1}$ & inverse error function & \nodim\\
+\end{symbols}
 
 \begin{keypoint}
 $\chist$ is proportional to the strain rate. Strain $\to\chist\to$ flame structure $\to$
@@ -264,6 +333,13 @@ which leaves
   \rho\pd{Y_k}{t}=\rho\frac{\chi}{2}\pd{^2Y_k}{Z^2}+W_k\wdot_k .
 \end{equation}
 \end{derivation}
+\begin{symbols}
+$Z_x$, $Z_{xx}$ & first and second $x$-derivatives of $Z$ & \si{\per\metre}, \si{\per\metre\squared}\\
+$Y_k$ & mass fraction of $k$ & \nodim\\
+$\chi=2DZ_x^2$ & scalar dissipation rate & \si{\per\second}\\
+$W_k\wdot_k$ & chemical mass source & \si{\kilo\gram\per\metre\cubed\per\second}\\
+$\rho$, $t$ & density, time & \si{\kilo\gram\per\metre\cubed}, \si{\second}\\
+\end{symbols}
 In $Z$-space, \emph{all} flow information is in one parameter, $\chi$: a diffusion--reaction balance with
 diffusivity $\chi/2$. Plotting $T$ against $Z$ removes the geometry and makes flames at different
 strain directly comparable (\figref{fig:cf}).
