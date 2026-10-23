@@ -1,0 +1,140 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+% ── Minimal style ────────────────────────────────────────────────────────────
+\usefonttheme{professionalfonts}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{\hfill\color{gray}\scriptsize\insertframenumber\hspace{1.2em}\vspace{0.8em}}
+
+% Okabe-Ito colours, one per section (same palette as the figures)
+\definecolor{introcolor}{HTML}{333333}
+\definecolor{partone}{HTML}{0072B2}
+\definecolor{parttwo}{HTML}{D55E00}
+\definecolor{partthree}{HTML}{009E73}
+
+\colorlet{accent}{introcolor}
+\newcommand{\sectioncolor}[1]{%
+  \colorlet{accent}{#1}%
+  \setbeamercolor{structure}{fg=#1}%
+  \setbeamercolor{frametitle}{fg=#1}}
+\sectioncolor{introcolor}
+
+\setbeamertemplate{frametitle}{%
+  \vspace{0.6em}\textbf{\insertframetitle}\par\vspace{-0.3em}%
+  {\color{accent}\rule{\textwidth}{1.2pt}}}
+
+\AtBeginSection{%
+  \begin{frame}[plain]
+    \vfill
+    {\color{accent}\rule{0.25\textwidth}{3pt}}\par\vspace{0.6em}
+    {\Huge\bfseries\color{accent}\insertsectionhead}
+    \vfill
+  \end{frame}}
+
+% Logo: falls back to a box if logo/mcgill.png is missing
+\newcommand{\mcgilllogo}[1]{\IfFileExists{logo/mcgill.png}%
+  {\includegraphics[height=#1]{logo/mcgill.png}}%
+  {\fbox{\parbox[c][#1][c]{3cm}{\centering\tiny McGill logo}}}}
+
+% One figure + one sentence
+\newcommand{\figslide}[3]{%
+  \begin{frame}{#1}
+    \centering
+    \includegraphics[width=\linewidth,height=0.74\textheight,keepaspectratio]{#2}\par\vspace{0.4em}
+    {\small #3}
+  \end{frame}}
+
+\graphicspath{{../results/part1/figures/pdf/}{../results/part2/figures/pdf/}{../results/part3/figures/pdf/}}
+
+\title{Reactive Flows with Cantera}
+\subtitle{ASEC onboarding project: equilibrium, diffusion flames, premixed flames}
+\author{Dara Rahmat Samii}
+\institute{McGill University}
+\date{\today}
+
+\begin{document}
+
+% ── Intro ────────────────────────────────────────────────────────────────────
+\begin{frame}[plain]
+  \vfill
+  \mcgilllogo{1.1cm}\par\vspace{1.5em}
+  {\color{accent}\rule{0.25\textwidth}{3pt}}\par\vspace{0.6em}
+  {\LARGE\bfseries\inserttitle}\par\vspace{0.3em}
+  {\large\insertsubtitle}\par\vspace{1.5em}
+  \insertauthor\ \textperiodcentered\ \insertinstitute\ \textperiodcentered\ \insertdate
+  \vfill
+\end{frame}
+
+\begin{frame}{Overview}
+  H$_2$/air with Cantera (\texttt{h2o2.yaml}), from thermodynamics to flames.
+  \vspace{1em}
+  \begin{itemize}
+    \item[\textcolor{partone}{\rule{0.8em}{0.8em}}] \textbf{\textcolor{partone}{Part 1}}: adiabatic flame temperature and chemical equilibrium
+    \item[\textcolor{parttwo}{\rule{0.8em}{0.8em}}] \textbf{\textcolor{parttwo}{Part 2}}: counterflow diffusion flames, $T(Z)$ versus scalar dissipation
+    \item[\textcolor{partthree}{\rule{0.8em}{0.8em}}] \textbf{\textcolor{partthree}{Part 3}}: freely propagating premixed flames, $S_L$ and $\delta_L$
+  \end{itemize}
+\end{frame}
+
+% ── Part 1 ───────────────────────────────────────────────────────────────────
+\sectioncolor{partone}
+\section{Part 1 \textperiodcentered\ Equilibrium}
+
+\figslide{$T_\mathrm{ad}$ vs equivalence ratio}{task1_Tad_vs_phi}
+  {The peak (2403\,K) sits at $\phi \approx 1.06$, not at stoichiometric, because slightly rich mixtures dissociate less.}
+\figslide{Where the flame becomes too cold}{task1_Tad_vs_phi_wide}
+  {$T_\mathrm{ad}$ drops below 1000\,K for $\phi < 0.23$ and $\phi > 9.5$, bracketing the flammability limits.}
+\figslide{Effect of preheat and pressure}{task1_Tad_vs_phi_Tu_and_p}
+  {Preheat shifts the whole curve up; pressure only lifts it near $\phi = 1$, where dissociation matters.}
+\figslide{$T_\mathrm{ad}$ vs preheat temperature}{task2_Tad_vs_Tu}
+  {Only 0.46--0.70\,K of flame temperature is gained per kelvin of preheat; the rest goes into dissociation and higher $c_p$.}
+\figslide{Preheat sensitivity vs $\phi$}{task2_slope_vs_phi}
+  {The slope is lowest at stoichiometric, where the flame is hottest and dissociates most.}
+\figslide{Gain from preheating 300\,$\to$\,600\,K}{task2_preheat_gain}
+  {Preheating by 300\,K adds only 144\,K at $\phi = 1$, but up to $\sim$260\,K for very lean or rich mixtures.}
+\figslide{$T_\mathrm{ad}(\phi, T_u)$ overview}{task2_overview_2d_3d}
+  {The 2D curves are cuts through one surface whose ridge stays slightly rich of stoichiometric.}
+\figslide{Pressure and radicals}{task3_Tad_and_radicals_vs_p}
+  {From 1 to 20\,atm, $T_\mathrm{ad}$ rises only 73\,K while H and O fall as $p^{-1/2}$ (Le Chatelier).}
+\figslide{$T_\mathrm{ad}$ vs pressure for several $\phi$}{task3_Tad_vs_p_phis}
+  {Pressure matters most near $\phi = 1$ (+96\,K) and is negligible for the cool lean flame.}
+\figslide{Radical maps}{task3_radical_maps}
+  {OH and H peak in a hot ridge near stoichiometric that fades as pressure rises.}
+\figslide{Thermal NO$_x$}{task3_thermal_no}
+  {Going from $\phi = 1$ to the lean-premixed window cuts the Zeldovich NO rate by about three orders of magnitude.}
+\figslide{2D equilibrium maps}{task4_maps}
+  {$T_u$ drives $T_\mathrm{ad}$ far more than $p$; the 1800\,K isoline marks the low-NO$_x$ lean limit.}
+\figslide{Maps as surfaces}{task4_surfaces}
+  {Both maxima sit on the domain edge at slightly rich $\phi$.}
+
+% ── Part 2 ───────────────────────────────────────────────────────────────────
+\sectioncolor{parttwo}
+\section{Part 2 \textperiodcentered\ Diffusion Flames}
+
+\figslide{$T(Z)$ at increasing scalar dissipation}{part2_T_vs_Z}
+  {Higher $\chi_\mathrm{st}$ leaves less time for chemistry, so the flame falls further below the equilibrium envelope.}
+\figslide{$T(Z)$ on a log $Z$ axis}{part2_T_vs_Z_logZ}
+  {On the lean side the flames exceed equilibrium, a sign of H$_2$ differential diffusion.}
+\figslide{Towards extinction}{part2_Tmax_vs_chi}
+  {The burning branch ends at $\chi_\mathrm{st} \approx 81$\,s$^{-1}$, after which the solution collapses to pure mixing.}
+
+% ── Part 3 ───────────────────────────────────────────────────────────────────
+\sectioncolor{partthree}
+\section{Part 3 \textperiodcentered\ Premixed Flames}
+
+\figslide{Flame structure}{part3_flame_structure}
+  {Heat release peaks at $\sim$1000\,K, while slow recombination keeps raising the temperature downstream.}
+\figslide{Burned gas vs equilibrium}{part3_equilibrium_check}
+  {The flame's burned gas matches HP equilibrium to 0.06\,\% in temperature and within 4\,\% for each species.}
+\figslide{Transport models: temperature}{part3_T_profiles}
+  {Mixture-averaged transport gives a faster flame (233 vs 164\,cm/s) with a similar thickness.}
+\figslide{Transport models: mixture fraction}{part3_Z_profiles}
+  {$Z$ dips by 20\,\% under mixture-averaged transport because H$_2$ diffuses faster than heat; it stays constant for Le\,=\,1.}
+\figslide{$S_L(\phi)$ and $\delta_L(\phi)$}{part3_SL_deltaL_vs_phi}
+  {$S_L$ peaks at $\phi \approx 1.7$, and the two transport models cross near $\phi \approx 0.67$.}
+\figslide{Pressure sweep}{part3_pressure_sweep}
+  {$\delta_L$ falls almost as $1/p$, while $S_L$ drops only slowly and is not a clean power law.}
+\figslide{Preheat sweep}{part3_preheat_sweep}
+  {$S_L \propto T_u^{1.69}$: preheating by 200\,K more than doubles the flame speed.}
+\figslide{$S_L\delta_L$ vs pressure}{part3_SLdelta_vs_p}
+  {$S_L\delta_L$ tracks the thermal diffusivity, which scales as $1/p$; normalised by $\alpha_u$ it varies only twofold.}
+
+\end{document}

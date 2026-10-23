@@ -13,6 +13,7 @@ from scipy.special import erfinv
 AIR_STREAM = "O2:0.21, N2:0.79"
 
 
+# %============================================================================
 def solve_counterflow(strain_rate, mechanism="h2o2.yaml", fuel="H2",
                       T_fuel=300.0, T_ox=300.0, p=101325.0, width=0.02):
     """
@@ -64,6 +65,7 @@ def solve_counterflow(strain_rate, mechanism="h2o2.yaml", fuel="H2",
     return flame
 
 
+# %============================================================================
 def stoichiometric_mixture_fraction(fuel="H2", oxidizer="O2:1, N2:3.76",
                                     mechanism="h2o2.yaml"):
     """
@@ -90,6 +92,7 @@ def stoichiometric_mixture_fraction(fuel="H2", oxidizer="O2:1, N2:3.76",
     return gas.mixture_fraction(fuel, oxidizer)
 
 
+# %============================================================================
 def scalar_dissipation_rate(flame):
     """
     Scalar dissipation rate chi(x) = 2 D |dZ/dx|^2 across a solved flame.
@@ -112,6 +115,7 @@ def scalar_dissipation_rate(flame):
     return 2 * D * np.gradient(Z, flame.grid) ** 2
 
 
+# %============================================================================
 def extract_TZ_profile(flame, fuel="H2", oxidizer="O2:1, N2:3.76"):
     """
     Extract temperature and mixture-fraction profiles from a solved flame.
@@ -140,6 +144,7 @@ def extract_TZ_profile(flame, fuel="H2", oxidizer="O2:1, N2:3.76"):
     return Z, flame.T, chi[np.argmin(np.abs(Z - Z_st))]
 
 
+# %============================================================================
 def chi_st_analytic(strain_rate, Z_st):
     """
     Analytical chi at Z_st for a constant-density counterflow.
@@ -161,6 +166,7 @@ def chi_st_analytic(strain_rate, Z_st):
     return np.asarray(strain_rate) / np.pi * np.exp(-2 * erfinv(1 - 2 * Z_st) ** 2)
 
 
+# %============================================================================
 def equilibrium_T_of_Z(Z_range, fuel="H2", T_fuel=300.0, T_ox=300.0,
                        p=101325.0, mechanism="h2o2.yaml", oxidizer=AIR_STREAM):
     """
@@ -207,6 +213,7 @@ def equilibrium_T_of_Z(Z_range, fuel="H2", T_fuel=300.0, T_ox=300.0,
     return T_eq
 
 
+# %============================================================================
 def flame_to_dataframe(flame):
     """
     Export a solved flame's profiles with ``to_pandas``, plus Z and chi.

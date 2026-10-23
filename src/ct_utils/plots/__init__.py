@@ -29,6 +29,7 @@ MARKERS = ["o", "s", "^", "D", "v", "P", "X", "*"]
 CMAP = "viridis"
 
 
+# %============================================================================
 def set_style(usetex=None, font_size=11):
     """
     Apply a professional, colourblind-safe Matplotlib style.
@@ -85,6 +86,7 @@ def set_style(usetex=None, font_size=11):
     return usetex
 
 
+# %============================================================================
 def _as_series(x, y):
     """Normalise x and y into two equal-length lists of 1D arrays."""
     several_y = isinstance(y, (list, tuple)) and np.ndim(y[0]) == 1
@@ -96,6 +98,7 @@ def _as_series(x, y):
     return xs, ys
 
 
+# %============================================================================
 def _reference_lines(ax, values, orientation):
     """Draw labelled dashed reference lines (vertical or horizontal)."""
     if values is None:
@@ -107,6 +110,7 @@ def _reference_lines(ax, values, orientation):
         draw(value, color="0.45", ls="--", lw=1.0, label=label, zorder=0)
 
 
+# %============================================================================
 def plot(x, y, xlabel, ylabel, figsize=(6.4, 4.2), legend=True, grid=True,
          labels=None, title=None, ax=None, xscale="linear", yscale="linear",
          markevery=None, colors=None, vlines=None, hlines=None, **kwargs):
@@ -176,6 +180,7 @@ def plot(x, y, xlabel, ylabel, figsize=(6.4, 4.2), legend=True, grid=True,
     return fig, ax
 
 
+# %============================================================================
 def contour_map(x, y, Z, xlabel, ylabel, zlabel, figsize=(6.4, 4.6),
                 levels=20, isolines=None, mark_max=True, ax=None,
                 xscale="linear", title=None, cmap=CMAP):
@@ -240,6 +245,7 @@ def contour_map(x, y, Z, xlabel, ylabel, zlabel, figsize=(6.4, 4.6),
     return fig, ax
 
 
+# %============================================================================
 def surface_3d(x, y, Z, xlabel, ylabel, zlabel, figsize=(7.0, 5.2),
                lines=None, mark_max=True, ax=None, view=(25, -130),
                title=None, cmap=CMAP):
@@ -310,6 +316,7 @@ def surface_3d(x, y, Z, xlabel, ylabel, zlabel, figsize=(7.0, 5.2),
     return fig, ax
 
 
+# %============================================================================
 def save_figure(fig, name, formats=("pdf", "jpeg"), folder=None):
     """
     Save a figure once per format, each in its own subfolder.

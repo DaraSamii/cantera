@@ -1,4 +1,7 @@
-"""Equilibrium calculations, parameter sweeps and result saving.
+"""Equilibrium calculations and parameter sweeps.
+
+Post-processing lives in ``postprocessing.py`` and saving in ``export.py``;
+their functions are re-exported here, so ``general.save_states`` etc. work.
 
 All equilibrium calculations here are adiabatic and isobaric: the reactants are
 set to ``(T_u, p)`` at a given equivalence ratio and then equilibrated at
@@ -10,13 +13,12 @@ broadcasts ``phi``, ``T_u`` and ``p`` against each other. The sweep and map
 functions are thin wrappers around it, so no sweep logic is duplicated.
 """
 
-from pathlib import Path
-
 import cantera as ct
 import numpy as np
-import pandas as pd
 
-from ct_utils import raw_dir
+from ct_utils.general.export import save_dataframe, save_states            # noqa: F401 (re-exported)
+from ct_utils.general.postprocessing import (                               # noqa: F401 (re-exported)
+    crossings, linear_slope, mole_fractions, power_law_exponent, power_law_fit, zeldovich_no_rate)
 
 #: Air as 1 mol O2 + 3.76 mol N2.
 AIR = "O2:1, N2:3.76"
@@ -24,6 +26,8 @@ AIR = "O2:1, N2:3.76"
 
 # ── Single states ─────────────────────────────────────────────────────────────
 
+
+# %============================================================================
 def equilibrium_state(phi, fuel="H2", T_u=300.0, p=101325.0,
                       mechanism="h2o2.yaml", oxidizer=AIR):
     """
@@ -57,6 +61,7 @@ def equilibrium_state(phi, fuel="H2", T_u=300.0, p=101325.0,
     return gas
 
 
+# %============================================================================
 def equilibrium_temperature(phi, fuel="H2", T_u=300.0, p=101325.0,
                             mechanism="h2o2.yaml", oxidizer=AIR):
     """
@@ -87,6 +92,8 @@ def equilibrium_temperature(phi, fuel="H2", T_u=300.0, p=101325.0,
 
 # ── Arrays of states ──────────────────────────────────────────────────────────
 
+
+# %============================================================================
 def equilibrium_states(phi, T_u=300.0, p=101325.0, fuel="H2",
                        mechanism="h2o2.yaml", oxidizer=AIR):
     """
@@ -129,6 +136,7 @@ def equilibrium_states(phi, T_u=300.0, p=101325.0, fuel="H2",
     return states
 
 
+# %============================================================================
 def equilibrium_sweep(phi_range, fuel="H2", T_u=300.0, p=101325.0,
                       mechanism="h2o2.yaml", oxidizer=AIR):
     """
@@ -159,6 +167,7 @@ def equilibrium_sweep(phi_range, fuel="H2", T_u=300.0, p=101325.0,
     return states.T.reshape(phi_range.shape)
 
 
+# %============================================================================
 def equilibrium_sweep_Tu(T_u_range, phi=1.0, fuel="H2", p=101325.0,
                          mechanism="h2o2.yaml", oxidizer=AIR):
     """
@@ -189,6 +198,7 @@ def equilibrium_sweep_Tu(T_u_range, phi=1.0, fuel="H2", p=101325.0,
     return states.T.reshape(T_u_range.shape)
 
 
+# %============================================================================
 def equilibrium_sweep_p(p_range, phi=1.0, fuel="H2", T_u=300.0,
                         mechanism="h2o2.yaml", oxidizer=AIR):
     """
@@ -219,6 +229,7 @@ def equilibrium_sweep_p(p_range, phi=1.0, fuel="H2", T_u=300.0,
     return states.T.reshape(p_range.shape)
 
 
+# %============================================================================
 def equilibrium_map(phi_range, sweep_range, sweep_param="T_u",
                     fuel="H2", fixed_T_u=300.0, fixed_p=101325.0,
                     mechanism="h2o2.yaml", oxidizer=AIR, return_states=False):
@@ -272,89 +283,7 @@ def equilibrium_map(phi_range, sweep_range, sweep_param="T_u",
     return (T_map, states) if return_states else T_map
 
 
-# ── Post-processing ───────────────────────────────────────────────────────────
-
-def mole_fractions(states, species):
-    """
-    Extract the mole fractions of selected species from a SolutionArray.
-
-    Parameters
-    ----------
-    states : cantera.SolutionArray
-        States to read from.
-    species : list of str
-        Species names, e.g. ``["OH", "H", "O"]``.
-
-    Returns
-    -------
-    dict of str to numpy.ndarray
-        Mole fraction array for each species, keyed by name.
-    """
-    names = states.species_names
-    return {sp: states.X[..., names.index(sp)] for sp in species}
-
-
-def crossings(x, y, level):
-    """
-    Find where a sampled curve y(x) crosses a given level.
-
-    Uses linear interpolation between the two samples on either side of
-    each crossing.
-
-    Parameters
-    ----------
-    x : array-like
-        Sample positions, monotonic.
-    y : array-like
-        Sampled values, same length as ``x``.
-    level : float
-        Level to look for.
-
-    Returns
-    -------
-    numpy.ndarray
-        x positions of every crossing, in increasing order of index.
-    """
-    x, y = np.asarray(x, dtype=float), np.asarray(y, dtype=float)
-    d = y - level
-    idx = np.where(np.sign(d[:-1]) * np.sign(d[1:]) < 0)[0]
-    return x[idx] - d[idx] * (x[idx + 1] - x[idx]) / (d[idx + 1] - d[idx])
-
-
-def linear_slope(x, y):
-    """
-    Least-squares slope dy/dx of a straight-line fit.
-
-    Parameters
-    ----------
-    x, y : array-like
-        Data points.
-
-    Returns
-    -------
-    float
-        Slope of the fitted line, in units of y per unit of x.
-    """
-    return np.polyfit(np.asarray(x, dtype=float), np.asarray(y, dtype=float), 1)[0]
-
-
-def power_law_exponent(x, y):
-    """
-    Exponent n of a power-law fit y = C x^n (slope on log-log axes).
-
-    Parameters
-    ----------
-    x, y : array-like
-        Positive data points.
-
-    Returns
-    -------
-    float
-        Fitted exponent n (dimensionless).
-    """
-    return linear_slope(np.log(x), np.log(y))
-
-
+# %============================================================================
 def preheat_slope(phi_range, T_u_range, p=101325.0, **kwargs):
     """
     Slope dT_ad/dT_u for each equivalence ratio.
@@ -380,82 +309,3 @@ def preheat_slope(phi_range, T_u_range, p=101325.0, **kwargs):
     """
     T_map = equilibrium_map(phi_range, T_u_range, "T_u", fixed_p=p, **kwargs)
     return np.array([linear_slope(T_u_range, row) for row in T_map])
-
-
-def zeldovich_no_rate(states):
-    """
-    Initial thermal-NO formation rate from the Zeldovich rate-limiting step.
-
-    Uses d[NO]/dt = 2 k1 [O][N2] with k1 = 1.8e11 exp(-38370/T) m^3/(kmol s)
-    for O + N2 -> NO + N, evaluated at each (equilibrium) state, and converts
-    it to a mole-fraction rate. The mechanism itself needs no N chemistry,
-    only the O and N2 species.
-
-    Parameters
-    ----------
-    states : cantera.SolutionArray or cantera.Solution
-        States containing the species O and N2.
-
-    Returns
-    -------
-    numpy.ndarray or float
-        NO formation rate in ppm per millisecond.
-    """
-    names = states.species_names
-    c = states.concentrations                          # kmol/m^3
-    k1 = 1.8e11 * np.exp(-38370.0 / states.T)          # m^3/(kmol s)
-    rate = 2 * k1 * c[..., names.index("O")] * c[..., names.index("N2")]
-    return rate / states.density_mole * 1e6 / 1e3      # 1/s -> ppm/ms
-
-
-# ── Saving ────────────────────────────────────────────────────────────────────
-
-def save_dataframe(df, name, folder=None):
-    """
-    Save a DataFrame as CSV in the current part's ``raw`` folder.
-
-    Parameters
-    ----------
-    df : pandas.DataFrame
-        Data to save.
-    name : str
-        File name without extension.
-    folder : path-like, optional
-        Output folder. Default ``results/<part>/raw`` (see ``ct_utils.set_part``).
-
-    Returns
-    -------
-    pathlib.Path
-        Path of the written file.
-    """
-    folder = Path(folder) if folder is not None else raw_dir()
-    folder.mkdir(parents=True, exist_ok=True)
-    path = folder / f"{name}.csv"
-    df.to_csv(path, index=False)
-    return path
-
-
-def save_states(states, name, folder=None):
-    """
-    Export a SolutionArray with ``to_pandas`` and save it as CSV.
-
-    The columns are the inputs ``phi`` and ``T_u``, then ``T`` (K), ``P`` (Pa)
-    and the mole fraction of every species (``X_<name>``).
-
-    Parameters
-    ----------
-    states : cantera.SolutionArray
-        1D array of states, as returned by :func:`equilibrium_states`.
-    name : str
-        File name without extension.
-    folder : path-like, optional
-        Output folder. Default ``results/<part>/raw``.
-
-    Returns
-    -------
-    pandas.DataFrame
-        The exported table (also written to disk).
-    """
-    df = states.to_pandas(cols=("phi", "T_u", "T", "P", "X"))
-    save_dataframe(df, name, folder)
-    return df

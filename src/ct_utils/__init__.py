@@ -24,6 +24,7 @@ RESULTS_DIR = ROOT / "results"
 _part = None
 
 
+# %============================================================================
 def set_part(name):
     """
     Choose the project part that results and figures are saved under.
@@ -43,6 +44,7 @@ def set_part(name):
     return RESULTS_DIR / name
 
 
+# %============================================================================
 def part_dir():
     """
     Results folder of the current part.
@@ -55,6 +57,7 @@ def part_dir():
     return RESULTS_DIR / _part if _part else RESULTS_DIR
 
 
+# %============================================================================
 def raw_dir():
     """
     Folder for raw tabular results of the current part.
@@ -67,6 +70,7 @@ def raw_dir():
     return part_dir() / "raw"
 
 
+# %============================================================================
 def figures_dir():
     """
     Folder for figures of the current part (one subfolder per format).
