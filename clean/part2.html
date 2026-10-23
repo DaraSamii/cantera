@@ -1,0 +1,1074 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="H2/air equilibrium, diffusion flames and premixed flames with Cantera">
+      
+      
+      
+      
+        <link rel="prev" href="part1.html">
+      
+      
+        <link rel="next" href="part3.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Part 2, Diffusion flames - Cantera Reactive Flows, Part 1-3</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#part-2-non-premixed-flames-tz-at-increasing-scalar-dissipation-rate" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../index.html" title="Cantera Reactive Flows, Part 1-3" class="md-header__button md-logo" aria-label="Cantera Reactive Flows, Part 1-3" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cantera Reactive Flows, Part 1-3
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Part 2, Diffusion flames
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="part1.html" class="md-tabs__link">
+          
+  
+  
+  Clean
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../original/part1.html" class="md-tabs__link">
+          
+  
+  
+  Original
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Cantera Reactive Flows, Part 1-3" class="md-nav__button md-logo" aria-label="Cantera Reactive Flows, Part 1-3" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cantera Reactive Flows, Part 1-3
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clean
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Clean
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="part1.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1, Equilibrium
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2, Diffusion flames
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="part2.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2, Diffusion flames
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-family-of-counterflow-flames" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Family of counterflow flames
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-tz-and-chi_mathrmst" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — \(T(Z)\) and \(\chi_\mathrm{st}\)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-equilibrium-envelope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Equilibrium envelope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-family-plot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Family plot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extinction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extinction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Answers
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="part3.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3, Premixed flames
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Original
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Original
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../original/part1.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1, Equilibrium
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../original/part2.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2, Diffusion flames
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../original/part3.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3, Premixed flames
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-family-of-counterflow-flames" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Family of counterflow flames
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-tz-and-chi_mathrmst" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — \(T(Z)\) and \(\chi_\mathrm{st}\)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-equilibrium-envelope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Equilibrium envelope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-family-plot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Family plot
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extinction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extinction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Answers
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="part-2-non-premixed-flames-tz-at-increasing-scalar-dissipation-rate">Part 2 — Non-Premixed Flames: <span class="arithmatex">\(T(Z)\)</span> at Increasing Scalar Dissipation Rate<a class="headerlink" href="#part-2-non-premixed-flames-tz-at-increasing-scalar-dissipation-rate" title="Permanent link">&para;</a></h1>
+<p>H<span class="arithmatex">\(_2\)</span>/air counterflow diffusion flames (<code>h2o2.yaml</code>, 300 K streams, 1 atm, 2 cm gap), compared with the equilibrium envelope <span class="arithmatex">\(T_\mathrm{eq}(Z)\)</span>.</p>
+<p>Functions live in <code>src/ct_utils/opposed_premixed_flame</code> (flames) and <code>src/ct_utils/plots</code>. Tables go to <code>results/part2/raw/</code>, figures to <code>results/part2/figures/{pdf,jpeg}/</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"src"</span><span class="p">))</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">ct_utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ct_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">general</span> <span class="k">as</span> <span class="n">eq</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ct_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">opposed_premixed_flame</span> <span class="k">as</span> <span class="n">cf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ct_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">plots</span>
+
+<span class="n">ct_utils</span><span class="o">.</span><span class="n">set_part</span><span class="p">(</span><span class="s2">"part2"</span><span class="p">)</span>      <span class="c1"># outputs go to results/part2/</span>
+<span class="n">plots</span><span class="o">.</span><span class="n">set_style</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="step-1-family-of-counterflow-flames">Step 1 — Family of counterflow flames<a class="headerlink" href="#step-1-family-of-counterflow-flames" title="Permanent link">&para;</a></h2>
+<p><strong><code>cf.solve_counterflow(strain_rate, mechanism, fuel, T_fuel, T_ox, p, width)</code></strong> solves one flame. Both inlets get <span class="arithmatex">\(\dot m = a\,\tfrac{L}{2}\,\tfrac{\rho_f + \rho_{ox}}{2}\)</span>; the grid is refined with <code>ratio=3, slope=0.05, curve=0.1</code>.</p>
+<p><strong><code>cf.flame_to_dataframe(flame)</code></strong> exports the profiles with <code>to_pandas()</code> plus <span class="arithmatex">\(x\)</span>, <span class="arithmatex">\(u\)</span>, <span class="arithmatex">\(Z\)</span>, <span class="arithmatex">\(\chi\)</span>; saved with <code>eq.save_dataframe</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="n">strain_rates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">]</span>          <span class="c1"># 1/s</span>
+<span class="n">flames</span> <span class="o">=</span> <span class="p">{</span><span class="n">a</span><span class="p">:</span> <span class="n">cf</span><span class="o">.</span><span class="n">solve_counterflow</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">strain_rates</span><span class="p">}</span>
+
+<span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">flame</span> <span class="ow">in</span> <span class="n">flames</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">eq</span><span class="o">.</span><span class="n">save_dataframe</span><span class="p">(</span><span class="n">cf</span><span class="o">.</span><span class="n">flame_to_dataframe</span><span class="p">(</span><span class="n">flame</span><span class="p">),</span> <span class="sa">f</span><span class="s2">"flame_a</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">({</span><span class="n">a</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">f</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> K"</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">flames</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>{50: '2365 K', 200: '2164 K', 500: '2003 K', 1000: '1873 K', 2000: '1733 K'}
+</code></pre></div>
+<h2 id="step-2-tz-and-chi_mathrmst">Step 2 — <span class="arithmatex">\(T(Z)\)</span> and <span class="arithmatex">\(\chi_\mathrm{st}\)</span><a class="headerlink" href="#step-2-tz-and-chi_mathrmst" title="Permanent link">&para;</a></h2>
+<p><strong><code>cf.extract_TZ_profile(flame, fuel, oxidizer)</code></strong> returns <span class="arithmatex">\(Z\)</span> (Bilger), <span class="arithmatex">\(T\)</span> and <span class="arithmatex">\(\chi_\mathrm{st}\)</span>, read at the grid point closest to <span class="arithmatex">\(Z_\mathrm{st}\)</span>. Helpers: <strong><code>cf.stoichiometric_mixture_fraction()</code></strong> gives <span class="arithmatex">\(Z_\mathrm{st}\)</span>, <strong><code>cf.scalar_dissipation_rate(flame)</code></strong> gives <span class="arithmatex">\(\chi(x)\)</span>, and <strong><code>cf.chi_st_analytic(a, Z_st)</code></strong> gives the constant-density estimate for comparison.</p>
+<div class="arithmatex">\[
+\chi = 2D\,|\nabla Z|^2, \qquad D = \frac{k}{\rho c_p}, \qquad
+\chi_\mathrm{st}^\mathrm{an} = \frac{a}{\pi}\exp\!\left(-2\left[\mathrm{erf}^{-1}(1 - 2Z_\mathrm{st})\right]^2\right)
+\]</div>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+<th>SI unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(\chi\)</span>, <span class="arithmatex">\(\chi_\mathrm{st}\)</span></td>
+<td>Scalar dissipation rate (at <span class="arithmatex">\(Z_\mathrm{st}\)</span>)</td>
+<td>1/s</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(D\)</span></td>
+<td>Mixture diffusivity (unity Lewis number)</td>
+<td>m²/s</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(k\)</span>, <span class="arithmatex">\(\rho\)</span>, <span class="arithmatex">\(c_p\)</span></td>
+<td>Conductivity, density, specific heat</td>
+<td>W/(m·K), kg/m³, J/(kg·K)</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(Z\)</span>, <span class="arithmatex">\(Z_\mathrm{st}\)</span></td>
+<td>Mixture fraction, stoichiometric value</td>
+<td>–</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(a\)</span></td>
+<td>Strain rate</td>
+<td>1/s</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="n">Z_st</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">stoichiometric_mixture_fraction</span><span class="p">()</span>
+<span class="n">profiles</span> <span class="o">=</span> <span class="p">{</span><span class="n">a</span><span class="p">:</span> <span class="n">cf</span><span class="o">.</span><span class="n">extract_TZ_profile</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">flames</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+<span class="n">summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">"a (1/s)"</span><span class="p">:</span> <span class="n">strain_rates</span><span class="p">,</span>
+    <span class="s2">"a_max measured (1/s)"</span><span class="p">:</span> <span class="p">[</span><span class="n">flames</span><span class="p">[</span><span class="n">a</span><span class="p">]</span><span class="o">.</span><span class="n">strain_rate</span><span class="p">(</span><span class="s2">"max"</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">strain_rates</span><span class="p">],</span>
+    <span class="s2">"chi_st (1/s)"</span><span class="p">:</span> <span class="p">[</span><span class="n">profiles</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">strain_rates</span><span class="p">],</span>
+    <span class="s2">"chi_st analytic (1/s)"</span><span class="p">:</span> <span class="n">cf</span><span class="o">.</span><span class="n">chi_st_analytic</span><span class="p">(</span><span class="n">strain_rates</span><span class="p">,</span> <span class="n">Z_st</span><span class="p">),</span>
+    <span class="s2">"T_max (K)"</span><span class="p">:</span> <span class="p">[</span><span class="n">profiles</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">strain_rates</span><span class="p">],</span>
+    <span class="s2">"Z at T_max"</span><span class="p">:</span> <span class="p">[</span><span class="n">profiles</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">profiles</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="mi">1</span><span class="p">])]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">strain_rates</span><span class="p">],</span>
+<span class="p">})</span>
+<span class="n">eq</span><span class="o">.</span><span class="n">save_dataframe</span><span class="p">(</span><span class="n">summary</span><span class="p">,</span> <span class="s2">"summary"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Z_st = </span><span class="si">{</span><span class="n">Z_st</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">summary</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">float_format</span><span class="o">=</span><span class="s2">"</span><span class="si">%.4g</span><span class="s2">"</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>Z_st = 0.0285
+
+ a (1/s)  a_max measured (1/s)  chi_st (1/s)  chi_st analytic (1/s)  T_max (K)  Z at T_max
+      50                   827        0.9155                 0.4257       2365      0.0317
+     200                  2829         3.559                  1.703       2164     0.03214
+     500                  6223         8.787                  4.257       2003     0.03219
+    1000             1.159e+04         17.33                  8.514       1873     0.03218
+    2000             2.308e+04         33.87                  17.03       1733     0.03238
+</code></pre></div>
+<h2 id="step-3-equilibrium-envelope">Step 3 — Equilibrium envelope<a class="headerlink" href="#step-3-equilibrium-envelope" title="Permanent link">&para;</a></h2>
+<p><strong><code>cf.equilibrium_T_of_Z(Z_range, ...)</code></strong> blends the streams by mass at each <span class="arithmatex">\(Z\)</span>, blends the enthalpy the same way (<span class="arithmatex">\(h = Z h_f + (1-Z) h_{ox}\)</span>), and equilibrates at constant <span class="arithmatex">\(h\)</span>, <span class="arithmatex">\(p\)</span>.</p>
+<div class="highlight"><pre><span></span><code><span class="n">Z_eq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">201</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">181</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]])</span>
+<span class="n">T_eq</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">equilibrium_T_of_Z</span><span class="p">(</span><span class="n">Z_eq</span><span class="p">)</span>
+<span class="n">eq</span><span class="o">.</span><span class="n">save_dataframe</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"Z"</span><span class="p">:</span> <span class="n">Z_eq</span><span class="p">,</span> <span class="s2">"T_eq"</span><span class="p">:</span> <span class="n">T_eq</span><span class="p">}),</span> <span class="s2">"T_eq_of_Z"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"T_eq max = </span><span class="si">{</span><span class="n">T_eq</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> K at Z = </span><span class="si">{</span><span class="n">Z_eq</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">T_eq</span><span class="p">)]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>T_eq max = 2402 K at Z = 0.0305
+</code></pre></div>
+<h2 id="step-4-family-plot">Step 4 — Family plot<a class="headerlink" href="#step-4-family-plot" title="Permanent link">&para;</a></h2>
+<p>Left: the requested figure (<span class="arithmatex">\(Z \in [0, 1]\)</span>). Right: the same on a log <span class="arithmatex">\(Z\)</span> axis, where the reaction zone near <span class="arithmatex">\(Z_\mathrm{st}\)</span> is visible.</p>
+<div class="highlight"><pre><span></span><code><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="sa">rf</span><span class="s2">"$\chi_\mathrm</span><span class="se">{{</span><span class="s2">st</span><span class="se">}}</span><span class="s2"> = </span><span class="si">{</span><span class="n">profiles</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">$ s$^</span><span class="se">{{</span><span class="s2">-1</span><span class="se">}}</span><span class="s2">$"</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">strain_rates</span><span class="p">]</span>
+<span class="n">Zs</span> <span class="o">=</span> <span class="p">[</span><span class="n">profiles</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">strain_rates</span><span class="p">]</span>
+<span class="n">Ts</span> <span class="o">=</span> <span class="p">[</span><span class="n">profiles</span><span class="p">[</span><span class="n">a</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">strain_rates</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">xscale</span><span class="p">,</span> <span class="n">xlim</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[(</span><span class="s2">"linear"</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">"part2_T_vs_Z"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"log"</span><span class="p">,</span> <span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">"part2_T_vs_Z_logZ"</span><span class="p">)]:</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">plots</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Zs</span><span class="p">,</span> <span class="n">Ts</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"Mixture fraction $Z$ [--]"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"Temperature $T$ [K]"</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+               <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">xscale</span><span class="o">=</span><span class="n">xscale</span><span class="p">,</span> <span class="n">markevery</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Z_eq</span><span class="p">,</span> <span class="n">T_eq</span><span class="p">,</span> <span class="s2">"k--"</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"none"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$T_\mathrm</span><span class="si">{eq}</span><span class="s2">(Z)$"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">Z_st</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"0.5"</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"none"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">rf</span><span class="s2">"$Z_\mathrm</span><span class="se">{{</span><span class="s2">st</span><span class="se">}}</span><span class="s2"> = </span><span class="si">{</span><span class="n">Z_st</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">$"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">*</span><span class="n">xlim</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+    <span class="n">plots</span><span class="o">.</span><span class="n">save_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p><img alt="" src="part2_files/fig1.png" /></p>
+<p><img alt="" src="part2_files/fig2.png" /></p>
+<h2 id="extinction">Extinction<a class="headerlink" href="#extinction" title="Permanent link">&para;</a></h2>
+<p>A solution that has extinguished collapses to pure mixing: <span class="arithmatex">\(T_\mathrm{max}\)</span> drops to the inlet temperature. Scanning higher strain rates locates where that happens.</p>
+<div class="highlight"><pre><span></span><code><span class="n">a_scan</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">3000</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">,</span> <span class="mi">6000</span><span class="p">,</span> <span class="mi">7000</span><span class="p">,</span> <span class="mi">8000</span><span class="p">,</span> <span class="mi">9000</span><span class="p">,</span> <span class="mi">10000</span><span class="p">])</span>
+<span class="n">scan</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">a_scan</span><span class="p">:</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">solve_counterflow</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">Z</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">chi</span> <span class="o">=</span> <span class="n">cf</span><span class="o">.</span><span class="n">extract_TZ_profile</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">scan</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"a (1/s)"</span><span class="p">:</span> <span class="n">a</span><span class="p">,</span> <span class="s2">"chi_st (1/s)"</span><span class="p">:</span> <span class="n">chi</span><span class="p">,</span> <span class="s2">"T_max (K)"</span><span class="p">:</span> <span class="n">T</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="s2">"burning"</span><span class="p">:</span> <span class="n">T</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">})</span>
+<span class="n">scan</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scan</span><span class="p">)</span>
+<span class="n">eq</span><span class="o">.</span><span class="n">save_dataframe</span><span class="p">(</span><span class="n">scan</span><span class="p">,</span> <span class="s2">"extinction_scan"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">scan</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">float_format</span><span class="o">=</span><span class="s2">"</span><span class="si">%.4g</span><span class="s2">"</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code> a (1/s)  chi_st (1/s)  T_max (K)  burning
+    2000         33.87       1733     True
+    3000         50.25       1643     True
+    4000         65.41       1573     True
+    5000         81.29       1506     True
+    6000        0.4273        300    False
+    7000        0.3659      300.1    False
+    8000        0.3192      300.9    False
+    9000         0.283      300.1    False
+   10000        0.2509      300.9    False
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">burn</span> <span class="o">=</span> <span class="n">scan</span><span class="p">[</span><span class="n">scan</span><span class="o">.</span><span class="n">burning</span><span class="p">]</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plots</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">burn</span><span class="p">[</span><span class="s2">"chi_st (1/s)"</span><span class="p">],</span> <span class="n">burn</span><span class="p">[</span><span class="s2">"T_max (K)"</span><span class="p">],</span> <span class="sa">r</span><span class="s2">"$\chi_\mathrm</span><span class="si">{st}</span><span class="s2">$ (s$^{-1}$)"</span><span class="p">,</span>
+                     <span class="sa">r</span><span class="s2">"$T_\mathrm</span><span class="si">{max}</span><span class="s2">$ (K)"</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xscale</span><span class="o">=</span><span class="s2">"log"</span><span class="p">,</span>
+                     <span class="n">title</span><span class="o">=</span><span class="s2">"Peak temperature on the burning branch"</span><span class="p">)</span>
+<span class="n">plots</span><span class="o">.</span><span class="n">save_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s2">"part2_Tmax_vs_chi"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p><img alt="" src="part2_files/fig3.png" /></p>
+<h2 id="answers">Answers<a class="headerlink" href="#answers" title="Permanent link">&para;</a></h2>
+<p><strong>1. Why is <span class="arithmatex">\(T_\mathrm{eq}(Z)\)</span> asymmetric?</strong> On a linear <span class="arithmatex">\(Z\)</span> axis the drop is actually steeper toward <span class="arithmatex">\(Z = 0\)</span>, because <span class="arithmatex">\(Z_\mathrm{st} = 0.0285\)</span> is so small. Toward <span class="arithmatex">\(Z = 1\)</span> it decays slowly. With complete combustion (Burke–Schumann), the temperature rise varies linearly on each side of <span class="arithmatex">\(Z_\mathrm{st}\)</span>:</p>
+<div class="arithmatex">\[
+T - T_\mathrm{mix} \propto \frac{Z}{Z_\mathrm{st}}\ (Z &lt; Z_\mathrm{st}), \qquad
+T - T_\mathrm{mix} \propto \frac{1 - Z}{1 - Z_\mathrm{st}}\ (Z &gt; Z_\mathrm{st})
+\]</div>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+<th>SI unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(T\)</span></td>
+<td>Burned temperature</td>
+<td>K</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(T_\mathrm{mix}\)</span></td>
+<td>Temperature of the unburned blend at <span class="arithmatex">\(Z\)</span></td>
+<td>K</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(Z\)</span>, <span class="arithmatex">\(Z_\mathrm{st}\)</span></td>
+<td>Mixture fraction, stoichiometric value</td>
+<td>–</td>
+</tr>
+</tbody>
+</table>
+<p>The lean branch climbs from <span class="arithmatex">\(Z = 0\)</span> to <span class="arithmatex">\(0.0285\)</span>, so it is steep. The rich branch spreads the fixed heat release over the extra fuel mass all the way to <span class="arithmatex">\(Z = 1\)</span>. Heat release is limited by the fuel on the lean side and by O<span class="arithmatex">\(_2\)</span> on the rich side.</p>
+<p><strong>2. Does the peak shift with <span class="arithmatex">\(\chi_\mathrm{st}\)</span>?</strong> Slightly richer: <span class="arithmatex">\(Z(T_\mathrm{max})\)</span> goes from <span class="arithmatex">\(0.0317\)</span> to <span class="arithmatex">\(0.0324\)</span> as <span class="arithmatex">\(\chi_\mathrm{st}\)</span> goes from 0.9 to 34 s<span class="arithmatex">\(^{-1}\)</span>, and to <span class="arithmatex">\(0.0336\)</span> just before extinction. Higher strain lets unburned H<span class="arithmatex">\(_2\)</span> leak through the reaction zone. H<span class="arithmatex">\(_2\)</span> diffuses fast, so the zone where heat release balances losses moves toward the fuel side.</p>
+<p><strong>3. The area between <span class="arithmatex">\(T(Z)\)</span> and <span class="arithmatex">\(T_\mathrm{eq}(Z)\)</span></strong> is the enthalpy not yet released as heat, because of incomplete combustion and dissociation not recombining. Its size is set by the Damköhler number <span class="arithmatex">\(\mathrm{Da} \sim \tau_\mathrm{mix}/\tau_\mathrm{chem} \sim 1/(\chi_\mathrm{st}\,\tau_\mathrm{chem})\)</span>: higher <span class="arithmatex">\(\chi_\mathrm{st}\)</span> gives less time for chemistry and a larger gap.</p>
+<p><strong>4. Closest to extinction:</strong> the burning branch ends between <span class="arithmatex">\(a = 5000\)</span> s<span class="arithmatex">\(^{-1}\)</span> (<span class="arithmatex">\(\chi_\mathrm{st} \approx 81\)</span> s<span class="arithmatex">\(^{-1}\)</span>, <span class="arithmatex">\(T_\mathrm{max} \approx 1506\)</span> K) and <span class="arithmatex">\(a = 6000\)</span> s<span class="arithmatex">\(^{-1}\)</span>, where the solution collapses to pure mixing. Of the main five, <span class="arithmatex">\(\chi_\mathrm{st} = 33.9\)</span> s<span class="arithmatex">\(^{-1}\)</span> is closest. You detect it in the flame object by <code>flame.T.max()</code> dropping to the inlet temperature (and the heat release, <code>flame.heat_release_rate</code>, going to zero). This scan restarts every solve from scratch; a strain-rate continuation from the last burning solution would pin the limit more precisely.</p>
+<p><strong>5. Why the lowest-strain flame still differs from equilibrium:</strong> (a) <span class="arithmatex">\(\chi_\mathrm{st} \approx 0.9\)</span> s<span class="arithmatex">\(^{-1}\)</span> is small but not zero, so the radicals do not fully recombine; (b) mainly differential diffusion. H<span class="arithmatex">\(_2\)</span> is very light (Lewis number <span class="arithmatex">\(\approx 0.3\)</span>), so it diffuses ahead of heat. The element-based <span class="arithmatex">\(Z\)</span> is then no longer a conserved enthalpy coordinate, and <span class="arithmatex">\(T\)</span> even exceeds <span class="arithmatex">\(T_\mathrm{eq}\)</span> on the lean side (<span class="arithmatex">\(Z &lt; 0.02\)</span>). The equilibrium envelope assumes equal diffusivities.</p>
+<p>The measured <span class="arithmatex">\(\chi_\mathrm{st}\)</span> is about <span class="arithmatex">\(2\times\)</span> the constant-density analytic value, and the measured maximum strain is about <span class="arithmatex">\(15\times\)</span> the target <span class="arithmatex">\(a\)</span>. Both come from the large density difference between the H<span class="arithmatex">\(_2\)</span> and air jets, which the project's equal-mass-flux formula does not account for.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.cards", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

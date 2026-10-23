@@ -1,0 +1,982 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="H2/air equilibrium, diffusion flames and premixed flames with Cantera">
+      
+      
+      
+      
+        <link rel="prev" href="part1.html">
+      
+      
+        <link rel="next" href="part3.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Part 2, Diffusion flames - Cantera Reactive Flows, Part 1-3</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#task-1-tz-at-increasing-scalar-dissipation-rate" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../index.html" title="Cantera Reactive Flows, Part 1-3" class="md-header__button md-logo" aria-label="Cantera Reactive Flows, Part 1-3" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cantera Reactive Flows, Part 1-3
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Part 2, Diffusion flames
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../clean/part1.html" class="md-tabs__link">
+          
+  
+  
+  Clean
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="part1.html" class="md-tabs__link">
+          
+  
+  
+  Original
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Cantera Reactive Flows, Part 1-3" class="md-nav__button md-logo" aria-label="Cantera Reactive Flows, Part 1-3" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cantera Reactive Flows, Part 1-3
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clean
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Clean
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clean/part1.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1, Equilibrium
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clean/part2.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2, Diffusion flames
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clean/part3.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3, Premixed flames
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Original
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Original
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="part1.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1, Equilibrium
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="part2.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2, Diffusion flames
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="part3.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3, Premixed flames
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">cantera</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ct</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+</code></pre></div>
+<h1 id="task-1-tz-at-increasing-scalar-dissipation-rate">Task 1 - <span class="arithmatex">\(T(Z)\)</span> at  Increasing Scalar Dissipation Rate<a class="headerlink" href="#task-1-tz-at-increasing-scalar-dissipation-rate" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">solve_counterflow</span><span class="p">(</span><span class="n">strain_rate</span><span class="p">,</span> <span class="n">mechanism</span><span class="o">=</span><span class="s2">"h2o2.yaml"</span><span class="p">,</span>
+                      <span class="n">fuel</span><span class="o">=</span><span class="s2">"H2"</span><span class="p">,</span> <span class="n">T_fuel</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">T_ox</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span>
+                      <span class="n">p</span><span class="o">=</span><span class="mf">101325.0</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.02</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Solve a H2/air counterflow diffusion flame at a given strain rate.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    strain_rate : float</span>
+<span class="sd">        Target strain rate in 1/s.</span>
+<span class="sd">    mechanism : str</span>
+<span class="sd">        Cantera mechanism file.</span>
+<span class="sd">    fuel : str</span>
+<span class="sd">        Fuel species name.</span>
+<span class="sd">    T_fuel : float</span>
+<span class="sd">        Fuel stream temperature in K.</span>
+<span class="sd">    T_ox : float</span>
+<span class="sd">        Oxidiser stream temperature in K.</span>
+<span class="sd">    p : float</span>
+<span class="sd">        Pressure in Pa.</span>
+<span class="sd">    width : float</span>
+<span class="sd">        Domain width in m.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cantera.CounterflowDiffusionFlame</span>
+<span class="sd">        Solved flame object.</span>
+<span class="sd">    """</span>
+    <span class="n">gas</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">Solution</span><span class="p">(</span><span class="n">mechanism</span><span class="p">)</span>
+
+    <span class="n">fuel_stream</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">fuel</span><span class="si">}</span><span class="s2">:1"</span>
+    <span class="n">ox_stream</span>   <span class="o">=</span> <span class="s2">"O2:0.21, N2:0.79"</span>
+
+    <span class="n">flame</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">CounterflowDiffusionFlame</span><span class="p">(</span><span class="n">gas</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">)</span>
+    <span class="n">flame</span><span class="o">.</span><span class="n">fuel_inlet</span><span class="o">.</span><span class="n">X</span>       <span class="o">=</span> <span class="n">fuel_stream</span>
+    <span class="n">flame</span><span class="o">.</span><span class="n">fuel_inlet</span><span class="o">.</span><span class="n">T</span>       <span class="o">=</span> <span class="n">T_fuel</span>
+    <span class="n">flame</span><span class="o">.</span><span class="n">oxidizer_inlet</span><span class="o">.</span><span class="n">X</span>   <span class="o">=</span> <span class="n">ox_stream</span>
+    <span class="n">flame</span><span class="o">.</span><span class="n">oxidizer_inlet</span><span class="o">.</span><span class="n">T</span>   <span class="o">=</span> <span class="n">T_ox</span>
+    <span class="n">flame</span><span class="o">.</span><span class="n">P</span>                  <span class="o">=</span> <span class="n">p</span>
+
+    <span class="c1"># Set mass fluxes to achieve target strain rate</span>
+    <span class="c1"># For symmetric counterflow: a ≈ 2 * mdot / (rho * L/2)</span>
+    <span class="n">gas</span><span class="o">.</span><span class="n">TPX</span> <span class="o">=</span> <span class="n">T_fuel</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">fuel_stream</span>
+    <span class="n">rho_f</span>   <span class="o">=</span> <span class="n">gas</span><span class="o">.</span><span class="n">density</span>
+    <span class="n">gas</span><span class="o">.</span><span class="n">TPX</span> <span class="o">=</span> <span class="n">T_ox</span><span class="p">,</span>   <span class="n">p</span><span class="p">,</span> <span class="n">ox_stream</span>
+    <span class="n">rho_ox</span>  <span class="o">=</span> <span class="n">gas</span><span class="o">.</span><span class="n">density</span>
+    <span class="n">mdot</span>    <span class="o">=</span> <span class="n">strain_rate</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">width</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">rho_f</span> <span class="o">+</span> <span class="n">rho_ox</span><span class="p">)</span>
+    <span class="n">flame</span><span class="o">.</span><span class="n">fuel_inlet</span><span class="o">.</span><span class="n">mdot</span>      <span class="o">=</span> <span class="n">mdot</span>
+    <span class="n">flame</span><span class="o">.</span><span class="n">oxidizer_inlet</span><span class="o">.</span><span class="n">mdot</span>  <span class="o">=</span> <span class="n">mdot</span>
+
+    <span class="n">flame</span><span class="o">.</span><span class="n">set_refine_criteria</span><span class="p">(</span><span class="n">ratio</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">curve</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="n">flame</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">loglevel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">auto</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">flame</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">df_flame</span> <span class="o">=</span> <span class="n">flame</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+<span class="n">df_flame</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>       grid   velocity    spreadRate        Lambda      T   density  X_H2  \
+0  0.000000  76.554167  9.743717e-18 -2.084724e+06  300.0  0.081894   1.0   
+1  0.000426  76.493953  1.415012e+02 -2.084724e+06  300.0  0.081894   1.0   
+2  0.000851  76.313314  2.830024e+02 -2.084724e+06  300.0  0.081894   1.0   
+3  0.001277  76.012247  4.245036e+02 -2.084724e+06  300.0  0.081894   1.0   
+4  0.001702  75.590754  5.660047e+02 -2.084724e+06  300.0  0.081894   1.0   
+
+            X_H  X_O          X_O2          X_OH         X_H2O  X_HO2  \
+0  3.291891e-15  0.0  1.616098e-15  6.989079e-18  0.000000e+00    0.0   
+1  3.287032e-15  0.0  1.616098e-15  7.982616e-19  7.055326e-20    0.0   
+2  3.279319e-15  0.0  1.616098e-15  0.000000e+00  0.000000e+00    0.0   
+3  3.270038e-15  0.0  1.616098e-15  0.000000e+00  0.000000e+00    0.0   
+4  3.259876e-15  0.0  1.616098e-15  0.000000e+00  0.000000e+00    0.0   
+
+         X_H2O2          X_AR  X_N2  
+0  1.586003e-19  2.349687e-17   0.0  
+1  1.586003e-19  2.349687e-17   0.0  
+2  1.586003e-19  2.349687e-17   0.0  
+3  1.586003e-19  2.349687e-17   0.0  
+4  1.586003e-19  2.349687e-17   0.0
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">df_flame</span><span class="o">.</span><span class="n">shape</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>(248, 16)
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">df_flame</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>&lt;class 'pandas.DataFrame'&gt;
+RangeIndex: 248 entries, 0 to 247
+Data columns (total 16 columns):
+ #   Column      Non-Null Count  Dtype  
+---  ------      --------------  -----  
+ 0   grid        248 non-null    float64
+ 1   velocity    248 non-null    float64
+ 2   spreadRate  248 non-null    float64
+ 3   Lambda      248 non-null    float64
+ 4   T           248 non-null    float64
+ 5   density     248 non-null    float64
+ 6   X_H2        248 non-null    float64
+ 7   X_H         248 non-null    float64
+ 8   X_O         248 non-null    float64
+ 9   X_O2        248 non-null    float64
+ 10  X_OH        248 non-null    float64
+ 11  X_H2O       248 non-null    float64
+ 12  X_HO2       248 non-null    float64
+ 13  X_H2O2      248 non-null    float64
+ 14  X_AR        248 non-null    float64
+ 15  X_N2        248 non-null    float64
+dtypes: float64(16)
+memory usage: 31.1 KB
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_flame</span><span class="p">[</span><span class="s2">"grid"</span><span class="p">],</span> <span class="n">df_flame</span><span class="p">[</span><span class="s2">"T"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Temperature (K)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"Distance (m)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Temperature (K)"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>Text(0, 0.5, 'Temperature (K)')
+</code></pre></div>
+<p><img alt="" src="part2_files/fig1.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_flame</span><span class="p">[</span><span class="s2">"grid"</span><span class="p">],</span> <span class="n">df_flame</span><span class="p">[</span><span class="s2">"X_H2O"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Temperature (K)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"Distance (m)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Temperature (K)"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>Text(0, 0.5, 'Temperature (K)')
+</code></pre></div>
+<p><img alt="" src="part2_files/fig2.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]:</span>
+    <span class="n">flame</span> <span class="o">=</span> <span class="n">solve_counterflow</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"target a = </span><span class="si">{</span><span class="n">a</span><span class="si">:</span><span class="s2">5d</span><span class="si">}</span><span class="s2"> 1/s | T_max = </span><span class="si">{</span><span class="n">flame</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">7.1f</span><span class="si">}</span><span class="s2"> K | "</span>
+          <span class="sa">f</span><span class="s2">"grid points = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">flame</span><span class="o">.</span><span class="n">grid</span><span class="p">)</span><span class="si">}</span><span class="s2"> | a_max = </span><span class="si">{</span><span class="n">flame</span><span class="o">.</span><span class="n">strain_rate</span><span class="p">(</span><span class="s1">'max'</span><span class="p">)</span><span class="si">:</span><span class="s2">8.1f</span><span class="si">}</span><span class="s2"> 1/s"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>target a =    50 1/s | T_max =  2365.3 K | grid points = 218 | a_max =    827.0 1/s
+target a =   100 1/s | T_max =  2273.3 K | grid points = 230 | a_max =   1536.4 1/s
+target a =   500 1/s | T_max =  2003.2 K | grid points = 244 | a_max =   6222.6 1/s
+target a =  1000 1/s | T_max =  1873.1 K | grid points = 248 | a_max =  11592.5 1/s
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">extract_TZ_profile</span><span class="p">(</span><span class="n">flame</span><span class="p">,</span> <span class="n">fuel</span><span class="o">=</span><span class="s2">"H2"</span><span class="p">,</span> <span class="n">oxidizer</span><span class="o">=</span><span class="s2">"O2:1, N2:3.76"</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Extract temperature and mixture fraction profiles from a solved flame.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Z : numpy.ndarray</span>
+<span class="sd">        Mixture fraction at each grid point.</span>
+<span class="sd">    T : numpy.ndarray</span>
+<span class="sd">        Temperature in K at each grid point.</span>
+<span class="sd">    chi_st : float</span>
+<span class="sd">        Scalar dissipation rate at the stoichiometric surface (1/s).</span>
+<span class="sd">    """</span>
+    <span class="n">Z</span>   <span class="o">=</span> <span class="n">flame</span><span class="o">.</span><span class="n">mixture_fraction</span><span class="p">(</span><span class="s2">"Bilger"</span><span class="p">)</span>        <span class="c1"># flame method: element or "Bilger"</span>
+    <span class="n">T</span>   <span class="o">=</span> <span class="n">flame</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="c1"># Z_st from a separate gas object: gas method takes (fuel, oxidizer)</span>
+    <span class="n">solution</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">Solution</span><span class="p">(</span><span class="n">flame</span><span class="o">.</span><span class="n">gas</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+    <span class="n">solution</span><span class="o">.</span><span class="n">set_equivalence_ratio</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">fuel</span><span class="p">,</span> <span class="n">oxidizer</span><span class="p">)</span>
+    <span class="n">Z_st</span>   <span class="o">=</span> <span class="n">solution</span><span class="o">.</span><span class="n">mixture_fraction</span><span class="p">(</span><span class="n">fuel</span><span class="p">,</span> <span class="n">oxidizer</span><span class="p">)</span>
+
+    <span class="c1"># chi = 2 D (dZ/dx)^2 is not provided by Cantera, so compute it from Z(x)</span>
+    <span class="n">D</span>      <span class="o">=</span> <span class="n">flame</span><span class="o">.</span><span class="n">thermal_conductivity</span> <span class="o">/</span> <span class="p">(</span><span class="n">flame</span><span class="o">.</span><span class="n">density</span> <span class="o">*</span> <span class="n">flame</span><span class="o">.</span><span class="n">cp_mass</span><span class="p">)</span>
+    <span class="n">chi</span>    <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">D</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">flame</span><span class="o">.</span><span class="n">grid</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>     <span class="c1"># χ(x), 1/s</span>
+    <span class="n">idx_st</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">Z</span> <span class="o">-</span> <span class="n">Z_st</span><span class="p">))</span>
+    <span class="n">chi_st</span> <span class="o">=</span> <span class="n">chi</span><span class="p">[</span><span class="n">idx_st</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">Z</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">chi_st</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">flame</span> <span class="o">=</span> <span class="n">solve_counterflow</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">Z</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">chi_st</span> <span class="o">=</span> <span class="n">extract_TZ_profile</span><span class="p">(</span><span class="n">flame</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Z</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">T</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"chi_st = </span><span class="si">{</span><span class="n">chi_st</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> 1/s"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"T_max = </span><span class="si">{</span><span class="n">T</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> K"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Z from </span><span class="si">{</span><span class="n">Z</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">Z</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>(230,) (230,) chi_st = 1.807 1/s T_max = 2273 K
+Z from 1.00 to 0.00
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]:</span>
+    <span class="n">flame</span> <span class="o">=</span> <span class="n">solve_counterflow</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">Z</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">chi_st</span> <span class="o">=</span> <span class="n">extract_TZ_profile</span><span class="p">(</span><span class="n">flame</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"a = </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2"> 1/s | T_max = </span><span class="si">{</span><span class="n">T</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> K | chi_st = </span><span class="si">{</span><span class="n">chi_st</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> 1/s"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"Mixture Fraction (Z)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Temperature (K)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>&lt;matplotlib.legend.Legend at 0x7f928ce1b380&gt;
+</code></pre></div>
+<p><img alt="" src="part2_files/fig3.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">equilibrium_T_of_Z</span><span class="p">(</span><span class="n">Z_range</span><span class="p">,</span> <span class="n">fuel</span><span class="o">=</span><span class="s2">"H2"</span><span class="p">,</span> <span class="n">T_fuel</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">T_ox</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span>
+                       <span class="n">p</span><span class="o">=</span><span class="mf">101325.0</span><span class="p">,</span> <span class="n">mechanism</span><span class="o">=</span><span class="s2">"h2o2.yaml"</span><span class="p">,</span>
+                       <span class="n">oxidizer</span><span class="o">=</span><span class="s2">"O2:0.21, N2:0.79"</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compute the equilibrium temperature as a function of mixture fraction.</span>
+
+<span class="sd">    For each Z, the mixture is the linear blend of fuel and oxidiser streams.</span>
+<span class="sd">    The result is the upper-bound temperature envelope for any non-premixed flame.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Z_range : array-like</span>
+<span class="sd">        Mixture fraction values in [0, 1].</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray</span>
+<span class="sd">        T_eq in K at each Z.</span>
+<span class="sd">    """</span>
+    <span class="n">Z_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Z_range</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">gas</span>     <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">Solution</span><span class="p">(</span><span class="n">mechanism</span><span class="p">)</span>
+    <span class="n">T_eq</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Z_range</span><span class="p">))</span>
+
+    <span class="c1"># Fuel and oxidiser streams: mass fractions and specific enthalpy</span>
+    <span class="n">gas</span><span class="o">.</span><span class="n">TPX</span> <span class="o">=</span> <span class="n">T_fuel</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">fuel</span><span class="si">}</span><span class="s2">:1"</span>
+    <span class="n">Y_fuel</span><span class="p">,</span> <span class="n">h_fuel</span> <span class="o">=</span> <span class="n">gas</span><span class="o">.</span><span class="n">Y</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">gas</span><span class="o">.</span><span class="n">enthalpy_mass</span>
+
+    <span class="n">gas</span><span class="o">.</span><span class="n">TPX</span> <span class="o">=</span> <span class="n">T_ox</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">oxidizer</span>
+    <span class="n">Y_ox</span><span class="p">,</span>   <span class="n">h_ox</span>   <span class="o">=</span> <span class="n">gas</span><span class="o">.</span><span class="n">Y</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">gas</span><span class="o">.</span><span class="n">enthalpy_mass</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">Z</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Z_range</span><span class="p">):</span>
+        <span class="n">Y_mix</span>   <span class="o">=</span> <span class="n">Z</span> <span class="o">*</span> <span class="n">Y_fuel</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">Z</span><span class="p">)</span> <span class="o">*</span> <span class="n">Y_ox</span>
+        <span class="n">h_mix</span>   <span class="o">=</span> <span class="n">Z</span> <span class="o">*</span> <span class="n">h_fuel</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">Z</span><span class="p">)</span> <span class="o">*</span> <span class="n">h_ox</span>            <span class="c1"># blended enthalpy</span>
+        <span class="n">gas</span><span class="o">.</span><span class="n">TPY</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">T_fuel</span> <span class="o">+</span> <span class="n">T_ox</span><span class="p">),</span> <span class="n">p</span><span class="p">,</span> <span class="n">Y_mix</span>          <span class="c1"># sets the composition</span>
+        <span class="n">gas</span><span class="o">.</span><span class="n">HPY</span> <span class="o">=</span> <span class="n">h_mix</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">Y_mix</span>                          <span class="c1"># state with the blended enthalpy</span>
+        <span class="n">gas</span><span class="o">.</span><span class="n">equilibrate</span><span class="p">(</span><span class="s2">"HP"</span><span class="p">)</span>
+        <span class="n">T_eq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">gas</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="k">return</span> <span class="n">T_eq</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1001</span><span class="p">)</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">equilibrium_T_of_Z</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+
+<span class="c1"># Z_st for H2/air from a separate gas object</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">Solution</span><span class="p">(</span><span class="s2">"h2o2.yaml"</span><span class="p">)</span>
+<span class="n">ref</span><span class="o">.</span><span class="n">set_equivalence_ratio</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="s2">"H2"</span><span class="p">,</span> <span class="s2">"O2:1, N2:3.76"</span><span class="p">)</span>
+<span class="n">Z_st</span> <span class="o">=</span> <span class="n">ref</span><span class="o">.</span><span class="n">mixture_fraction</span><span class="p">(</span><span class="s2">"H2"</span><span class="p">,</span> <span class="s2">"O2:1, N2:3.76"</span><span class="p">)</span>
+
+<span class="c1"># Checks</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">300.0</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">T</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mf">300.0</span><span class="p">)</span>       <span class="c1"># pure air / pure fuel stay at 300 K</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">equilibrium_T_of_Z</span><span class="p">([</span><span class="n">Z_st</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">2387.6</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># equals phi = 1 flame T</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"T_max = </span><span class="si">{</span><span class="n">T</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> K at Z = </span><span class="si">{</span><span class="n">Z</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">T</span><span class="p">)]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">   (Z_st = </span><span class="si">{</span><span class="n">Z_st</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">scale</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="p">[</span><span class="s2">"linear"</span><span class="p">,</span> <span class="s2">"log"</span><span class="p">]):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Z</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="s2">"k"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">Z_st</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"$Z_</span><span class="se">{{</span><span class="s2">st</span><span class="se">}}</span><span class="s2">$ = </span><span class="si">{</span><span class="n">Z_st</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xscale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">"Mixture fraction Z"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Equilibrium temperature (K)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s2">"both"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Linear Z axis"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Log Z axis (shows the lean side)"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>T_max = 2402.4 K at Z = 0.030   (Z_st = 0.0285)
+</code></pre></div>
+<p><img alt="" src="part2_files/fig4.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">strain_rates</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">]</span>   <span class="c1"># 1/s — adjust to your mechanism</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">Z_eq</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="n">T_eq</span>  <span class="o">=</span> <span class="n">equilibrium_T_of_Z</span><span class="p">(</span><span class="n">Z_eq</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Z_eq</span><span class="p">,</span> <span class="n">T_eq</span><span class="p">,</span> <span class="s2">"k--"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Equilibrium $T_</span><span class="si">{eq}</span><span class="s2">(Z)$"</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">strain_rates</span><span class="p">:</span>
+    <span class="n">flame</span>      <span class="o">=</span> <span class="n">solve_counterflow</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">Z</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">chi</span>  <span class="o">=</span> <span class="n">extract_TZ_profile</span><span class="p">(</span><span class="n">flame</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"$</span><span class="se">\\</span><span class="s2">chi_</span><span class="se">{{</span><span class="s2">st</span><span class="se">}}</span><span class="s2">$ = </span><span class="si">{</span><span class="n">chi</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> s$^</span><span class="se">{{</span><span class="s2">-1</span><span class="se">}}</span><span class="s2">$"</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">Z_st</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"$Z_</span><span class="se">{{</span><span class="s2">st</span><span class="se">}}</span><span class="s2">$ = </span><span class="si">{</span><span class="n">Z_st</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Mixture fraction $Z$  [–]"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Temperature  $T$  [K]"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="c1">#fig.savefig("figures/part2_T_vs_Z.pdf")</span>
+</code></pre></div>
+<p><img alt="" src="part2_files/fig5.png" /></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.cards", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

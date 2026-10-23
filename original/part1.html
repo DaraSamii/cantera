@@ -1,0 +1,1237 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="H2/air equilibrium, diffusion flames and premixed flames with Cantera">
+      
+      
+      
+      
+        <link rel="prev" href="../clean/part3.html">
+      
+      
+        <link rel="next" href="part2.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Part 1, Equilibrium - Cantera Reactive Flows, Part 1-3</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="red" data-md-color-accent="orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#task-1-equivalence-ratio-sweep" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../index.html" title="Cantera Reactive Flows, Part 1-3" class="md-header__button md-logo" aria-label="Cantera Reactive Flows, Part 1-3" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cantera Reactive Flows, Part 1-3
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Part 1, Equilibrium
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../clean/part1.html" class="md-tabs__link">
+          
+  
+  
+  Clean
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="part1.html" class="md-tabs__link">
+          
+  
+  
+  Original
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Cantera Reactive Flows, Part 1-3" class="md-nav__button md-logo" aria-label="Cantera Reactive Flows, Part 1-3" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Cantera Reactive Flows, Part 1-3
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clean
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Clean
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clean/part1.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1, Equilibrium
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clean/part2.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2, Diffusion flames
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clean/part3.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3, Premixed flames
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Original
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Original
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="part1.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 1, Equilibrium
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="part2.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 2, Diffusion flames
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="part3.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part 3, Premixed flames
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">cantera</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ct</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span> 
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+</code></pre></div>
+<h1 id="task-1-equivalence-ratio-sweep">Task 1 -  Equivalence Ratio Sweep<a class="headerlink" href="#task-1-equivalence-ratio-sweep" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">equilibrium_temperature</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">fuel</span><span class="o">=</span><span class="s2">"H2"</span><span class="p">,</span> <span class="n">T_u</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">101325.0</span><span class="p">,</span>
+                             <span class="n">mechanism</span><span class="o">=</span><span class="s2">"h2o2.yaml"</span><span class="p">,</span>
+                             <span class="n">oxidizer</span><span class="o">=</span><span class="s2">"O2:1, N2:3.76"</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Return the adiabatic flame temperature for a single condition.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    phi : float</span>
+<span class="sd">        Equivalence ratio.</span>
+<span class="sd">    fuel : str</span>
+<span class="sd">        Cantera fuel string (default: "H2").</span>
+<span class="sd">    T_u : float</span>
+<span class="sd">        Unburned mixture temperature in K (default: 300 K).</span>
+<span class="sd">    p : float</span>
+<span class="sd">        Pressure in Pa (default: 1 atm).</span>
+<span class="sd">    mechanism : str</span>
+<span class="sd">        Cantera mechanism file (default: "h2o2.yaml").</span>
+<span class="sd">    oxidizer : str</span>
+<span class="sd">        Oxidizer composition string (default: "O2:1, N2:3.76").</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Adiabatic flame temperature in K.</span>
+<span class="sd">    """</span>
+    <span class="o">...</span>
+
+    <span class="n">gas</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">Solution</span><span class="p">(</span><span class="n">mechanism</span><span class="p">)</span>
+    <span class="n">gas</span><span class="o">.</span><span class="n">set_equivalence_ratio</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">fuel</span><span class="p">,</span> <span class="n">oxidizer</span><span class="p">)</span>
+    <span class="n">gas</span><span class="o">.</span><span class="n">TP</span> <span class="o">=</span> <span class="n">T_u</span><span class="p">,</span> <span class="n">p</span>
+
+    <span class="n">gas</span><span class="o">.</span><span class="n">equilibrate</span><span class="p">(</span><span class="s2">"HP"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">gas</span><span class="o">.</span><span class="n">T</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">phi</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">T_H2</span> <span class="o">=</span> <span class="n">equilibrium_temperature</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Adiabatic flame temperature for </span><span class="si">{</span><span class="n">phi</span><span class="si">}</span><span class="s2"> equivalence ratio: </span><span class="si">{</span><span class="n">T_H2</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> K"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>Adiabatic flame temperature for 1.0 equivalence ratio: 2387.64 K
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">equilibrium_sweep</span><span class="p">(</span><span class="n">phi_range</span><span class="p">,</span> <span class="n">fuel</span><span class="o">=</span><span class="s2">"H2"</span><span class="p">,</span> <span class="n">T_u</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">101325.0</span><span class="p">,</span>
+                      <span class="n">mechanism</span><span class="o">=</span><span class="s2">"h2o2.yaml"</span><span class="p">,</span> <span class="n">oxidizer</span><span class="o">=</span><span class="s2">"O2:1, N2:3.76"</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Return T_ad for an array of equivalence ratios.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    phi_range : array-like</span>
+<span class="sd">        Array of equivalence ratios.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray</span>
+<span class="sd">        Adiabatic flame temperatures in K, same shape as phi_range.</span>
+<span class="sd">    """</span>
+    <span class="o">...</span>
+
+    <span class="n">phi_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">phi_range</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">states</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">SolutionArray</span><span class="p">(</span><span class="n">ct</span><span class="o">.</span><span class="n">Solution</span><span class="p">(</span><span class="n">mechanism</span><span class="p">),</span> <span class="n">shape</span><span class="o">=</span><span class="n">phi_range</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">states</span><span class="o">.</span><span class="n">set_equivalence_ratio</span><span class="p">(</span><span class="n">phi_range</span><span class="p">,</span> <span class="n">fuel</span><span class="p">,</span> <span class="n">oxidizer</span><span class="p">)</span>
+    <span class="n">states</span><span class="o">.</span><span class="n">TP</span> <span class="o">=</span> <span class="n">T_u</span><span class="p">,</span> <span class="n">p</span>
+    <span class="n">states</span><span class="o">.</span><span class="n">equilibrate</span><span class="p">(</span><span class="s2">"HP"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">states</span><span class="o">.</span><span class="n">T</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">phi_min</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">phi_max</span> <span class="o">=</span> <span class="mf">4.0</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">T_u</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">500</span><span class="p">]:</span>
+    <span class="n">phi_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">phi_min</span><span class="p">,</span> <span class="n">phi_max</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+    <span class="n">T_ad_values</span> <span class="o">=</span> <span class="n">equilibrium_sweep</span><span class="p">(</span><span class="n">phi_values</span><span class="p">,</span> <span class="n">T_u</span><span class="o">=</span><span class="n">T_u</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">phi_values</span><span class="p">,</span> <span class="n">T_ad_values</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'o'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"$T_u$ = </span><span class="si">{</span><span class="n">T_u</span><span class="si">}</span><span class="s2"> K"</span><span class="p">)</span>
+
+<span class="n">peak</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">T_ad_values</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">phi_values</span><span class="p">[</span><span class="n">peak</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">'red'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'--'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Peak adiabatic flame temperature occurs at phi = </span><span class="si">{</span><span class="n">phi_values</span><span class="p">[</span><span class="n">peak</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Adiabatic Flame Temperature vs Equivalence Ratio"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"Equivalence Ratio (phi)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Adiabatic Flame Temperature (K)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>Peak adiabatic flame temperature occurs at phi = 1.09
+</code></pre></div>
+<p><img alt="" src="part1_files/fig1.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="n">p_atm</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">one_atm</span>
+
+<span class="n">phi_min</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">phi_max</span> <span class="o">=</span> <span class="mf">4.0</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span><span class="mf">10.0</span><span class="p">]:</span>
+    <span class="n">phi_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">phi_min</span><span class="p">,</span> <span class="n">phi_max</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="n">T_ad_values</span> <span class="o">=</span> <span class="n">equilibrium_sweep</span><span class="p">(</span><span class="n">phi_values</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span> <span class="o">*</span> <span class="n">p_atm</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">phi_values</span><span class="p">,</span> <span class="n">T_ad_values</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'o'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"$p$ = </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2"> Pa"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Adiabatic Flame Temperature vs Equivalence Ratio"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"Equivalence Ratio (phi)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Adiabatic Flame Temperature (K)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p><img alt="" src="part1_files/fig2.png" /></p>
+<h1 id="task-2-preheat-temperature-sweep">Task 2 - Preheat Temperature Sweep<a class="headerlink" href="#task-2-preheat-temperature-sweep" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">equilibrium_sweep_Tu</span><span class="p">(</span><span class="n">T_u_range</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">fuel</span><span class="o">=</span><span class="s2">"H2"</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">101325.0</span><span class="p">,</span>
+                         <span class="n">mechanism</span><span class="o">=</span><span class="s2">"h2o2.yaml"</span><span class="p">,</span> <span class="n">oxidizer</span><span class="o">=</span><span class="s2">"O2:1, N2:3.76"</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return T_ad for an array of unburned temperatures."""</span>
+
+    <span class="n">T_u_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">T_u_range</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">states</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">SolutionArray</span><span class="p">(</span><span class="n">ct</span><span class="o">.</span><span class="n">Solution</span><span class="p">(</span><span class="n">mechanism</span><span class="p">),</span> <span class="n">shape</span><span class="o">=</span><span class="n">T_u_range</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">states</span><span class="o">.</span><span class="n">set_equivalence_ratio</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">fuel</span><span class="p">,</span> <span class="n">oxidizer</span><span class="p">)</span>
+    <span class="n">states</span><span class="o">.</span><span class="n">TP</span> <span class="o">=</span> <span class="n">T_u_range</span><span class="p">,</span> <span class="n">p</span>
+    <span class="n">states</span><span class="o">.</span><span class="n">equilibrate</span><span class="p">(</span><span class="s2">"HP"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">states</span><span class="o">.</span><span class="n">T</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">equilibrium_sweep_Tu</span><span class="p">([</span><span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">500</span><span class="p">])</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>array([2334.67298638, 2387.63690001, 2438.11277218, 2485.95587179])
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">gradient</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>array([0.85427384, 0.85439156, 0.85445167, 0.85449856, 0.85456934,
+       0.85469393, 0.85489511, 0.85518858, 0.85558297, 0.85607992,
+       0.85667407, 0.85735313, 0.85809794, 0.85888253, 0.85967421,
+       0.86043375, 0.8611155 , 0.86166769, 0.86203268])
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">phi</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">]:</span>
+    <span class="n">Ts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">Tad_values</span> <span class="o">=</span> <span class="n">equilibrium_sweep_Tu</span><span class="p">(</span><span class="n">Ts</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">)</span>
+
+    <span class="n">gradient</span> <span class="o">=</span> <span class="p">(</span><span class="n">Tad_values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">Tad_values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">Ts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">Ts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Ts</span><span class="p">,</span> <span class="n">Tad_values</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'o'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"$</span><span class="se">\\</span><span class="s2">phi$ = </span><span class="si">{</span><span class="n">phi</span><span class="si">}</span><span class="s2">, grad = </span><span class="si">{</span><span class="n">gradient</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Adiabatic Flame Temperature vs Unburned Temperature"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"Unburned Temperature (K)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Adiabatic Flame Temperature (K)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+</code></pre></div>
+<p><img alt="" src="part1_files/fig3.png" /></p>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>array([0.73079591, 0.72795811, 0.7218909 , 0.71509991, 0.707699  ,
+       0.69979191, 0.69147223, 0.68282334, 0.67391856, 0.66482134,
+       0.65558544, 0.64625538, 0.63686683, 0.6274471 , 0.61801577,
+       0.60858526, 0.59916153, 0.58974471, 0.58032982, 0.57562193])
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span><span class="mf">10.0</span><span class="p">]:</span>
+    <span class="n">phis1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+    <span class="n">phis2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+
+    <span class="n">phis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">phis1</span><span class="p">,</span> <span class="n">phis2</span><span class="p">))</span>
+    <span class="n">grads</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">phis</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">phi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">phis</span><span class="p">):</span>
+        <span class="n">Ts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+        <span class="n">Tad_values</span> <span class="o">=</span> <span class="n">equilibrium_sweep_Tu</span><span class="p">(</span><span class="n">Ts</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span> <span class="o">*</span> <span class="n">p_atm</span><span class="p">)</span>
+
+        <span class="n">gradient</span> <span class="o">=</span> <span class="p">(</span><span class="n">Tad_values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">Tad_values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">Ts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">Ts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">grads</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">gradient</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">phis</span><span class="p">,</span> <span class="n">grads</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'o'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"$p$ = </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2"> atm"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Gradient of Adiabatic Flame Temperature vs Equivalence Ratio"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"Equivalence Ratio (phi)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Gradient (K/K)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+</code></pre></div>
+<p><img alt="" src="part1_files/fig4.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="n">phis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="n">T300</span> <span class="o">=</span> <span class="n">equilibrium_sweep</span><span class="p">(</span><span class="n">phis</span><span class="p">,</span> <span class="n">T_u</span><span class="o">=</span><span class="mf">300.0</span><span class="p">)</span>
+<span class="n">T600</span> <span class="o">=</span> <span class="n">equilibrium_sweep</span><span class="p">(</span><span class="n">phis</span><span class="p">,</span> <span class="n">T_u</span><span class="o">=</span><span class="mf">600.0</span><span class="p">)</span>
+<span class="n">gain</span> <span class="o">=</span> <span class="n">T600</span> <span class="o">-</span> <span class="n">T300</span>                          <span class="c1"># K gained by preheating</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"phi    T_ad(300)  T_ad(600)  gain (K)  gain/300K"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">phi</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]:</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">phis</span> <span class="o">-</span> <span class="n">phi</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">phis</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="si">:</span><span class="s2">4.2f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">T300</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="si">:</span><span class="s2">8.1f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">T600</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="si">:</span><span class="s2">8.1f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">gain</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="si">:</span><span class="s2">7.1f</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">gain</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">/</span><span class="mi">300</span><span class="si">:</span><span class="s2">6.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">))</span>
+<span class="n">a</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">phis</span><span class="p">,</span> <span class="n">T300</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"$T_u$ = 300 K"</span><span class="p">)</span>
+<span class="n">a</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">phis</span><span class="p">,</span> <span class="n">T600</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"$T_u$ = 600 K"</span><span class="p">)</span>
+<span class="n">a</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">"Equivalence ratio $</span><span class="se">\\</span><span class="s2">phi$"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"$T_</span><span class="si">{ad}</span><span class="s2">$ (K)"</span><span class="p">)</span>
+<span class="n">a</span><span class="o">.</span><span class="n">grid</span><span class="p">();</span> <span class="n">a</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">b</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">phis</span><span class="p">,</span> <span class="n">gain</span><span class="p">,</span> <span class="s2">"k"</span><span class="p">)</span>
+<span class="n">b</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"preheat = 300 K"</span><span class="p">)</span>
+<span class="n">b</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"r"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"stoichiometric"</span><span class="p">)</span>
+<span class="n">b</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">"Equivalence ratio $</span><span class="se">\\</span><span class="s2">phi$"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Gain $</span><span class="se">\\</span><span class="s2">Delta T_</span><span class="si">{ad}</span><span class="s2">$ (K)"</span><span class="p">)</span>
+<span class="n">b</span><span class="o">.</span><span class="n">grid</span><span class="p">();</span> <span class="n">b</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>phi    T_ad(300)  T_ad(600)  gain (K)  gain/300K
+0.30    1179.3    1443.2    263.9   0.880
+0.49    1629.4    1878.3    248.9   0.830
+0.71    2033.9    2250.2    216.4   0.721
+1.00    2388.4    2531.9    143.5   0.478
+1.49    2249.8    2450.8    201.0   0.670
+2.00    2060.1    2285.5    225.4   0.751
+3.00    1770.9    2020.1    249.2   0.831
+</code></pre></div>
+<p><img alt="" src="part1_files/fig5.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="n">Ts</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>       <span class="c1"># unburned temperature (K)</span>
+<span class="n">phis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>        <span class="c1"># equivalence ratio</span>
+<span class="n">TU</span><span class="p">,</span> <span class="n">PHI</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">Ts</span><span class="p">,</span> <span class="n">phis</span><span class="p">)</span>
+<span class="n">TAD</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">equilibrium_sweep_Tu</span><span class="p">(</span><span class="n">Ts</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">)</span> <span class="k">for</span> <span class="n">phi</span> <span class="ow">in</span> <span class="n">phis</span><span class="p">])</span>
+
+<span class="n">Tu_lines</span>  <span class="o">=</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">500</span><span class="p">]</span>
+<span class="n">phi_lines</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">]</span>
+<span class="n">col_Tu</span>  <span class="o">=</span> <span class="p">{</span><span class="n">T</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"C</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">"</span>   <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">T</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Tu_lines</span><span class="p">)}</span>     <span class="c1"># one colour per T_u</span>
+<span class="n">col_phi</span> <span class="o">=</span> <span class="p">{</span><span class="n">f</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"C</span><span class="si">{</span><span class="n">k</span><span class="o">+</span><span class="mi">4</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">phi_lines</span><span class="p">)}</span>    <span class="c1"># different set for phi</span>
+<span class="n">lift</span> <span class="o">=</span> <span class="mi">15</span>                                                     <span class="c1"># K, keeps 3D lines above the surface</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">ax3</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s2">"3d"</span><span class="p">)</span>
+<span class="n">ax4</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s2">"3d"</span><span class="p">)</span>
+
+<span class="c1"># ── 2D: T_ad vs phi, one line per T_u ─────────────────────────────────────</span>
+<span class="k">for</span> <span class="n">T_u</span> <span class="ow">in</span> <span class="n">Tu_lines</span><span class="p">:</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">phis</span><span class="p">,</span> <span class="n">equilibrium_sweep</span><span class="p">(</span><span class="n">phis</span><span class="p">,</span> <span class="n">T_u</span><span class="o">=</span><span class="n">T_u</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">col_Tu</span><span class="p">[</span><span class="n">T_u</span><span class="p">],</span>
+             <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">markevery</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"$T_u$ = </span><span class="si">{</span><span class="n">T_u</span><span class="si">}</span><span class="s2"> K"</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"$T_</span><span class="si">{ad}</span><span class="s2">$ vs equivalence ratio"</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="s2">"Equivalence ratio $</span><span class="se">\\</span><span class="s2">phi$"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Adiabatic flame temperature (K)"</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">grid</span><span class="p">();</span> <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="c1"># ── 2D: T_ad vs T_u, one line per phi ─────────────────────────────────────</span>
+<span class="k">for</span> <span class="n">phi</span> <span class="ow">in</span> <span class="n">phi_lines</span><span class="p">:</span>
+    <span class="n">Tad</span>  <span class="o">=</span> <span class="n">equilibrium_sweep_Tu</span><span class="p">(</span><span class="n">Ts</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">)</span>
+    <span class="n">grad</span> <span class="o">=</span> <span class="p">(</span><span class="n">Tad</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">Tad</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">Ts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">Ts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Ts</span><span class="p">,</span> <span class="n">Tad</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">col_phi</span><span class="p">[</span><span class="n">phi</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">markevery</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"$</span><span class="se">\\</span><span class="s2">phi$ = </span><span class="si">{</span><span class="n">phi</span><span class="si">}</span><span class="s2">, grad = </span><span class="si">{</span><span class="n">grad</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"$T_</span><span class="si">{ad}</span><span class="s2">$ vs unburned temperature"</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="s2">"Unburned temperature (K)"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Adiabatic flame temperature (K)"</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">grid</span><span class="p">();</span> <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="c1"># ── 3D: surface without lines, then with the same coloured lines ─────────</span>
+<span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">TAD</span><span class="p">),</span> <span class="n">TAD</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">with_lines</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">ax3</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span> <span class="p">(</span><span class="n">ax4</span><span class="p">,</span> <span class="kc">True</span><span class="p">)]:</span>
+    <span class="n">surf</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">TU</span><span class="p">,</span> <span class="n">PHI</span><span class="p">,</span> <span class="n">TAD</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"inferno"</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">"none"</span><span class="p">,</span>
+                           <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span> <span class="k">if</span> <span class="n">with_lines</span> <span class="k">else</span> <span class="mf">0.95</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">with_lines</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">phi</span> <span class="ow">in</span> <span class="n">phi_lines</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Ts</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">Ts</span><span class="p">,</span> <span class="n">phi</span><span class="p">),</span>
+                    <span class="n">equilibrium_sweep_Tu</span><span class="p">(</span><span class="n">Ts</span><span class="p">,</span> <span class="n">phi</span><span class="o">=</span><span class="n">phi</span><span class="p">)</span> <span class="o">+</span> <span class="n">lift</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">col_phi</span><span class="p">[</span><span class="n">phi</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">T_u</span> <span class="ow">in</span> <span class="n">Tu_lines</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">phis</span><span class="p">,</span> <span class="n">T_u</span><span class="p">),</span> <span class="n">phis</span><span class="p">,</span>
+                    <span class="n">equilibrium_sweep</span><span class="p">(</span><span class="n">phis</span><span class="p">,</span> <span class="n">T_u</span><span class="o">=</span><span class="n">T_u</span><span class="p">)</span> <span class="o">+</span> <span class="n">lift</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">col_Tu</span><span class="p">[</span><span class="n">T_u</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">TU</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">PHI</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">TAD</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"cyan"</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>   <span class="c1"># hottest grid point</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">"$T_u$ (K)"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"$</span><span class="se">\\</span><span class="s2">phi$"</span><span class="p">,</span> <span class="n">zlabel</span><span class="o">=</span><span class="s2">"$T_</span><span class="si">{ad}</span><span class="s2">$ (K)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">azim</span><span class="o">=-</span><span class="mi">130</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"3D surface"</span><span class="p">)</span>
+<span class="n">ax4</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"3D surface with the 2D lines"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>Text(0.5, 0.92, '3D surface with the 2D lines')
+</code></pre></div>
+<p><img alt="" src="part1_files/fig6.png" /></p>
+<h1 id="tast-3-pressure-sweep-and-equilibrium-composition">Tast 3 - Pressure Sweep and Equilibrium Composition<a class="headerlink" href="#tast-3-pressure-sweep-and-equilibrium-composition" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">equilibrium_state</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">fuel</span><span class="o">=</span><span class="s2">"H2"</span><span class="p">,</span> <span class="n">T_u</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mf">101325.0</span><span class="p">,</span>
+                      <span class="n">mechanism</span><span class="o">=</span><span class="s2">"h2o2.yaml"</span><span class="p">,</span> <span class="n">oxidizer</span><span class="o">=</span><span class="s2">"O2:1, N2:3.76"</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Return the full equilibrium state as a Cantera Solution object.</span>
+
+<span class="sd">    Returns the gas object after calling equilibrate("HP"), so the caller</span>
+<span class="sd">    can extract any property (T, X, Y, species mole fractions, etc.).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    cantera.Solution</span>
+<span class="sd">        Gas object at the equilibrium state.</span>
+<span class="sd">    """</span>
+
+
+    <span class="n">gas</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">Solution</span><span class="p">(</span><span class="n">mechanism</span><span class="p">)</span>
+    <span class="n">gas</span><span class="o">.</span><span class="n">set_equivalence_ratio</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">fuel</span><span class="p">,</span> <span class="n">oxidizer</span><span class="p">)</span>
+    <span class="n">gas</span><span class="o">.</span><span class="n">TP</span> <span class="o">=</span> <span class="n">T_u</span><span class="p">,</span> <span class="n">p</span>
+
+    <span class="n">gas</span><span class="o">.</span><span class="n">equilibrate</span><span class="p">(</span><span class="s2">"HP"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">gas</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">phi</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+<span class="n">state</span> <span class="o">=</span> <span class="n">equilibrium_state</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+<span class="n">state</span><span class="o">.</span><span class="n">T</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>2387.6369000144755
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">p</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>0
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">Ps_atm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>                  <span class="c1"># pressure (atm)</span>
+<span class="n">phis</span>   <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span>                   <span class="c1"># lean, near-lean, stoich, rich, very rich</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">phi</span> <span class="ow">in</span> <span class="n">phis</span><span class="p">:</span>
+    <span class="n">T_ad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">equilibrium_state</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span> <span class="o">*</span> <span class="n">ct</span><span class="o">.</span><span class="n">one_atm</span><span class="p">)</span><span class="o">.</span><span class="n">T</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">Ps_atm</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Ps_atm</span><span class="p">,</span> <span class="n">T_ad</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"$</span><span class="se">\\</span><span class="s2">phi$ = </span><span class="si">{</span><span class="n">phi</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Adiabatic Flame Temperature vs Pressure ($T_u$ = 300 K)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"Pressure (atm)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Adiabatic Flame Temperature (K)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p><img alt="" src="part1_files/fig7.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="n">Ps_atm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>                  <span class="c1"># pressure (atm)</span>
+<span class="n">phis</span>   <span class="o">=</span> <span class="p">[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">]</span>                   <span class="c1"># lean, near-lean, stoich, rich, very rich</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">phi</span> <span class="ow">in</span> <span class="n">phis</span><span class="p">:</span>
+    <span class="n">T_ad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">equilibrium_state</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span> <span class="o">*</span> <span class="n">ct</span><span class="o">.</span><span class="n">one_atm</span><span class="p">)</span><span class="o">.</span><span class="n">T</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">Ps_atm</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Ps_atm</span><span class="p">,</span> <span class="n">T_ad</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"$</span><span class="se">\\</span><span class="s2">phi$ = </span><span class="si">{</span><span class="n">phi</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Adiabatic Flame Temperature vs Pressure ($T_u$ = 300 K)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"Pressure (atm)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Adiabatic Flame Temperature (K)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p><img alt="" src="part1_files/fig8.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="n">gas</span><span class="o">.</span><span class="n">T</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>2316.869489916884
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">Ps_atm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>      <span class="c1"># pressure (atm)</span>
+<span class="n">phi</span>    <span class="o">=</span> <span class="mf">1.0</span>                             <span class="c1"># stoichiometric</span>
+
+<span class="n">X_OH</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">Ps_atm</span><span class="p">)</span>
+<span class="n">X_H</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">Ps_atm</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Ps_atm</span><span class="p">):</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">equilibrium_state</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span> <span class="o">*</span> <span class="n">ct</span><span class="o">.</span><span class="n">one_atm</span><span class="p">)</span>      <span class="c1"># one equilibrium solve per pressure</span>
+    <span class="n">X_OH</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">X</span><span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">species_index</span><span class="p">(</span><span class="s2">"OH"</span><span class="p">)]</span>
+    <span class="n">X_H</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>  <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">X</span><span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">species_index</span><span class="p">(</span><span class="s2">"H"</span><span class="p">)]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Ps_atm</span><span class="p">,</span> <span class="n">X_OH</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"$X_</span><span class="si">{OH}</span><span class="s2">$"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Ps_atm</span><span class="p">,</span> <span class="n">X_H</span><span class="p">,</span>  <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"$X_</span><span class="si">{H}</span><span class="s2">$"</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"OH and H Mole Fractions vs Pressure ($</span><span class="se">\\</span><span class="s2">phi$ = 1, $T_u$ = 300 K)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"Pressure (atm)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Mole fraction"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+<p><img alt="" src="part1_files/fig9.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="n">gas</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">Solution</span><span class="p">(</span><span class="s2">"h2o2.yaml"</span><span class="p">)</span>
+<span class="n">Ps_atm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="mi">40</span><span class="p">)</span>    <span class="c1"># log spacing suits a pressure axis</span>
+<span class="n">phis</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+<span class="n">P</span><span class="p">,</span> <span class="n">PHI</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">Ps_atm</span><span class="p">,</span> <span class="n">phis</span><span class="p">)</span>                       <span class="c1"># shape (len(phis), len(Ps_atm))</span>
+
+<span class="n">st</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">SolutionArray</span><span class="p">(</span><span class="n">gas</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">P</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">set_equivalence_ratio</span><span class="p">(</span><span class="n">PHI</span><span class="p">,</span> <span class="s2">"H2"</span><span class="p">,</span> <span class="s2">"O2:1, N2:3.76"</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">TP</span> <span class="o">=</span> <span class="mf">300.0</span><span class="p">,</span> <span class="n">P</span> <span class="o">*</span> <span class="n">ct</span><span class="o">.</span><span class="n">one_atm</span>
+<span class="n">st</span><span class="o">.</span><span class="n">equilibrate</span><span class="p">(</span><span class="s2">"HP"</span><span class="p">)</span>
+
+<span class="n">X_OH</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">X</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">gas</span><span class="o">.</span><span class="n">species_index</span><span class="p">(</span><span class="s2">"OH"</span><span class="p">)]</span>
+<span class="n">X_H</span>  <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">X</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">gas</span><span class="o">.</span><span class="n">species_index</span><span class="p">(</span><span class="s2">"H"</span><span class="p">)]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">))</span>
+
+<span class="c1"># Contours of log10(mole fraction): radicals span decades</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_OH</span><span class="p">,</span> <span class="s2">"OH"</span><span class="p">),</span> <span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">X_H</span><span class="p">,</span> <span class="s2">"H"</span><span class="p">)]:</span>
+    <span class="n">cs</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">PHI</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">Z</span><span class="p">),</span> <span class="n">levels</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"viridis"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Pressure (atm)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"$</span><span class="se">\\</span><span class="s2">phi$"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"log$_</span><span class="se">{{</span><span class="s2">10</span><span class="se">}}</span><span class="s2">$ $X_</span><span class="se">{{</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="se">}}</span><span class="s2">$"</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+
+<span class="c1"># Line plot at phi ~ 1 on log-log axes, so a straight line = a power law</span>
+<span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">phis</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">sp</span><span class="p">,</span> <span class="n">X</span> <span class="ow">in</span> <span class="p">[(</span><span class="s2">"OH"</span><span class="p">,</span> <span class="n">X_OH</span><span class="p">),</span> <span class="p">(</span><span class="s2">"H"</span><span class="p">,</span> <span class="n">X_H</span><span class="p">)]:</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">Ps_atm</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">sp</span><span class="p">)</span>
+    <span class="n">slope</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">Ps_atm</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">sp</span><span class="si">}</span><span class="s2">: d ln X / d ln p = </span><span class="si">{</span><span class="n">slope</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">"Pressure (atm)"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Mole fraction"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s2">"both"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</code></pre></div>
+<div class="highlight"><span class="filename">Output</span><pre><span></span><code>OH: d ln X / d ln p = -0.24
+H: d ln X / d ln p = -0.47
+</code></pre></div>
+<p><img alt="" src="part1_files/fig10.png" /></p>
+<div class="highlight"><pre><span></span><code><span class="n">gas</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">Solution</span><span class="p">(</span><span class="s2">"h2o2.yaml"</span><span class="p">)</span>
+<span class="n">phis</span>      <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">36</span><span class="p">)</span>
+<span class="n">pressures</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">]</span>              <span class="c1"># atm</span>
+<span class="n">T_u</span>       <span class="o">=</span> <span class="mf">700.0</span>                    <span class="c1"># K, typical compressor-outlet temperature</span>
+<span class="n">iO</span><span class="p">,</span> <span class="n">iN2</span>   <span class="o">=</span> <span class="n">gas</span><span class="o">.</span><span class="n">species_index</span><span class="p">(</span><span class="s2">"O"</span><span class="p">),</span> <span class="n">gas</span><span class="o">.</span><span class="n">species_index</span><span class="p">(</span><span class="s2">"N2"</span><span class="p">)</span>
+
+<span class="n">T_ad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">pressures</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">phis</span><span class="p">)))</span>
+<span class="n">X_O</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">T_ad</span><span class="p">)</span>
+<span class="n">dNO</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">T_ad</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">p_atm</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pressures</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">b</span><span class="p">,</span> <span class="n">phi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">phis</span><span class="p">):</span>
+        <span class="n">gas</span><span class="o">.</span><span class="n">set_equivalence_ratio</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="s2">"H2"</span><span class="p">,</span> <span class="s2">"O2:1, N2:3.76"</span><span class="p">)</span>
+        <span class="n">gas</span><span class="o">.</span><span class="n">TP</span> <span class="o">=</span> <span class="n">T_u</span><span class="p">,</span> <span class="n">p_atm</span> <span class="o">*</span> <span class="n">ct</span><span class="o">.</span><span class="n">one_atm</span>
+        <span class="n">gas</span><span class="o">.</span><span class="n">equilibrate</span><span class="p">(</span><span class="s2">"HP"</span><span class="p">)</span>
+        <span class="n">c</span>  <span class="o">=</span> <span class="n">gas</span><span class="o">.</span><span class="n">concentrations</span>                      <span class="c1"># kmol/m3</span>
+        <span class="n">k1</span> <span class="o">=</span> <span class="mf">1.8e11</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">38370.0</span> <span class="o">/</span> <span class="n">gas</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>       <span class="c1"># m3/kmol/s</span>
+        <span class="n">T_ad</span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span> <span class="o">=</span> <span class="n">gas</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">X_O</span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span>  <span class="o">=</span> <span class="n">gas</span><span class="o">.</span><span class="n">X</span><span class="p">[</span><span class="n">iO</span><span class="p">]</span>
+        <span class="c1"># Zeldovich NO formation rate as a mole-fraction rate (ppm per ms)</span>
+        <span class="n">dNO</span><span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">]</span>  <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">k1</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">iO</span><span class="p">]</span> <span class="o">*</span> <span class="n">c</span><span class="p">[</span><span class="n">iN2</span><span class="p">]</span> <span class="o">/</span> <span class="n">gas</span><span class="o">.</span><span class="n">density_mole</span> <span class="o">*</span> <span class="mf">1e6</span> <span class="o">/</span> <span class="mf">1e3</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">p_atm</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pressures</span><span class="p">):</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">phis</span><span class="p">,</span> <span class="n">T_ad</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">p_atm</span><span class="si">}</span><span class="s2"> atm"</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">phis</span><span class="p">,</span> <span class="n">X_O</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">p_atm</span><span class="si">}</span><span class="s2"> atm"</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">phis</span><span class="p">,</span> <span class="n">dNO</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">p_atm</span><span class="si">}</span><span class="s2"> atm"</span><span class="p">)</span>
+
+<span class="n">titles</span>  <span class="o">=</span> <span class="p">[</span><span class="s2">"Flame temperature"</span><span class="p">,</span> <span class="s2">"O-atom mole fraction (dissociation)"</span><span class="p">,</span> <span class="s2">"Thermal NO formation rate"</span><span class="p">]</span>
+<span class="n">ylabels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"$T_</span><span class="si">{ad}</span><span class="s2">$ (K)"</span><span class="p">,</span> <span class="s2">"$X_O$"</span><span class="p">,</span> <span class="s2">"d(NO)/dt (ppm/ms)"</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">yl</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">titles</span><span class="p">,</span> <span class="n">ylabels</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"green"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.12</span><span class="p">)</span>      <span class="c1"># lean-premixed gas-turbine window</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s2">"Equivalence ratio $</span><span class="se">\\</span><span class="s2">phi$"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="n">yl</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">which</span><span class="o">=</span><span class="s2">"both"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">"H$_2$/air, $T_u$ = </span><span class="si">{</span><span class="n">T_u</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> K, equilibrium state at constant H, P"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</code></pre></div>
+<p><img alt="" src="part1_files/fig11.png" /></p>
+<h1 id="task-4-2d-equilibrium-map">Task 4 - 2D Equilibrium Map<a class="headerlink" href="#task-4-2d-equilibrium-map" title="Permanent link">&para;</a></h1>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">equilibrium_map</span><span class="p">(</span><span class="n">phi_range</span><span class="p">,</span> <span class="n">sweep_range</span><span class="p">,</span> <span class="n">sweep_param</span><span class="o">=</span><span class="s2">"T_u"</span><span class="p">,</span>
+                    <span class="n">fuel</span><span class="o">=</span><span class="s2">"H2"</span><span class="p">,</span> <span class="n">fixed_T_u</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">fixed_p</span><span class="o">=</span><span class="mf">101325.0</span><span class="p">,</span>
+                    <span class="n">mechanism</span><span class="o">=</span><span class="s2">"h2o2.yaml"</span><span class="p">,</span> <span class="n">oxidizer</span><span class="o">=</span><span class="s2">"O2:1, N2:3.76"</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Compute a 2D map of T_ad over (phi, sweep_param).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    phi_range : array-like</span>
+<span class="sd">        Equivalence ratio axis.</span>
+<span class="sd">    sweep_range : array-like</span>
+<span class="sd">        Values of the swept parameter (T_u in K or p in Pa).</span>
+<span class="sd">    sweep_param : {"T_u", "p"}</span>
+<span class="sd">        Which parameter to sweep on the second axis.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    numpy.ndarray, shape (len(phi_range), len(sweep_range))</span>
+<span class="sd">        T_ad in K at each (phi, sweep_param) point.</span>
+<span class="sd">    """</span>
+
+    <span class="n">phi_range</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">phi_range</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">sweep_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sweep_range</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">PHI</span><span class="p">,</span> <span class="n">SWEEP</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">phi_range</span><span class="p">,</span> <span class="n">sweep_range</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s2">"ij"</span><span class="p">)</span>   <span class="c1"># (n_phi, n_sweep)</span>
+
+    <span class="n">T_u</span> <span class="o">=</span> <span class="n">SWEEP</span> <span class="k">if</span> <span class="n">sweep_param</span> <span class="o">==</span> <span class="s2">"T_u"</span> <span class="k">else</span> <span class="n">fixed_T_u</span>
+    <span class="n">p</span>   <span class="o">=</span> <span class="n">SWEEP</span> <span class="k">if</span> <span class="n">sweep_param</span> <span class="o">==</span> <span class="s2">"p"</span>   <span class="k">else</span> <span class="n">fixed_p</span>
+
+    <span class="n">states</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">SolutionArray</span><span class="p">(</span><span class="n">ct</span><span class="o">.</span><span class="n">Solution</span><span class="p">(</span><span class="n">mechanism</span><span class="p">),</span> <span class="n">shape</span><span class="o">=</span><span class="n">PHI</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">states</span><span class="o">.</span><span class="n">set_equivalence_ratio</span><span class="p">(</span><span class="n">PHI</span><span class="p">,</span> <span class="n">fuel</span><span class="p">,</span> <span class="n">oxidizer</span><span class="p">)</span>
+    <span class="n">states</span><span class="o">.</span><span class="n">TP</span> <span class="o">=</span> <span class="n">T_u</span><span class="p">,</span> <span class="n">p</span>
+    <span class="n">states</span><span class="o">.</span><span class="n">equilibrate</span><span class="p">(</span><span class="s2">"HP"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">states</span><span class="o">.</span><span class="n">T</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_equilibrium_map</span><span class="p">(</span><span class="n">phi_range</span><span class="p">,</span> <span class="n">sweep_range</span><span class="p">,</span> <span class="n">sweep_param</span><span class="o">=</span><span class="s2">"T_u"</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Plot the T_ad map as a 2D contour (left) and a 3D surface (right).</span>
+<span class="sd">    Extra keyword arguments (fuel, fixed_T_u, fixed_p, ...) go to equilibrium_map.</span>
+<span class="sd">    Returns (fig, T_ad)."""</span>
+    <span class="n">phi_range</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">phi_range</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">sweep_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">sweep_range</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">T_ad</span> <span class="o">=</span> <span class="n">equilibrium_map</span><span class="p">(</span><span class="n">phi_range</span><span class="p">,</span> <span class="n">sweep_range</span><span class="p">,</span> <span class="n">sweep_param</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">sweep_param</span> <span class="o">==</span> <span class="s2">"T_u"</span><span class="p">:</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">xlabel</span> <span class="o">=</span> <span class="n">sweep_range</span><span class="p">,</span> <span class="s2">"Unburned temperature $T_u$ (K)"</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">xlabel</span> <span class="o">=</span> <span class="n">sweep_range</span> <span class="o">/</span> <span class="n">ct</span><span class="o">.</span><span class="n">one_atm</span><span class="p">,</span> <span class="s2">"Pressure (atm)"</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">PHI</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">phi_range</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s2">"xy"</span><span class="p">)</span>      <span class="c1"># shape (n_phi, n_sweep), matches T_ad</span>
+
+    <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">T_ad</span><span class="p">),</span> <span class="n">T_ad</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>   <span class="c1"># hottest point</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">))</span>
+
+    <span class="n">ax2d</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">cs</span> <span class="o">=</span> <span class="n">ax2d</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">PHI</span><span class="p">,</span> <span class="n">T_ad</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"inferno"</span><span class="p">)</span>
+    <span class="n">ax2d</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">PHI</span><span class="p">,</span> <span class="n">T_ad</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s2">"k"</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax2d</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">PHI</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="s2">"c*"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span>
+              <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"max </span><span class="si">{</span><span class="n">T_ad</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> K at $</span><span class="se">\\</span><span class="s2">phi$=</span><span class="si">{</span><span class="n">PHI</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">ax2d</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Equivalence ratio $</span><span class="se">\\</span><span class="s2">phi$"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"2D map"</span><span class="p">)</span>
+    <span class="n">ax2d</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"upper left"</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cs</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2d</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"$T_</span><span class="si">{ad}</span><span class="s2">$ (K)"</span><span class="p">)</span>
+
+    <span class="n">ax3d</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s2">"3d"</span><span class="p">)</span>
+    <span class="n">surf</span> <span class="o">=</span> <span class="n">ax3d</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">PHI</span><span class="p">,</span> <span class="n">T_ad</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"inferno"</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">"none"</span><span class="p">)</span>
+    <span class="n">ax3d</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">PHI</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">T_ad</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"cyan"</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+    <span class="n">ax3d</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"$</span><span class="se">\\</span><span class="s2">phi$"</span><span class="p">,</span> <span class="n">zlabel</span><span class="o">=</span><span class="s2">"$T_</span><span class="si">{ad}</span><span class="s2">$ (K)"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"3D surface"</span><span class="p">)</span>
+    <span class="n">ax3d</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">azim</span><span class="o">=-</span><span class="mi">130</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax3d</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"$T_</span><span class="si">{ad}</span><span class="s2">$ (K)"</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Adiabatic flame temperature, </span><span class="si">{</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'fuel'</span><span class="p">,</span><span class="w"> </span><span class="s1">'H2'</span><span class="p">)</span><span class="si">}</span><span class="s2">/air"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">T_ad</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">phis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+
+<span class="c1"># T_u sweep at 1 atm</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">T_map</span> <span class="o">=</span> <span class="n">plot_equilibrium_map</span><span class="p">(</span><span class="n">phis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">1200</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="s2">"T_u"</span><span class="p">)</span>
+
+<span class="c1"># pressure sweep at T_u = 300 K (pressure is passed in Pa)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">T_map</span> <span class="o">=</span> <span class="n">plot_equilibrium_map</span><span class="p">(</span><span class="n">phis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span> <span class="o">*</span> <span class="n">ct</span><span class="o">.</span><span class="n">one_atm</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">)</span>
+
+<span class="c1"># other fuel or mechanism</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">T_map</span> <span class="o">=</span> <span class="n">plot_equilibrium_map</span><span class="p">(</span><span class="n">phis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">1200</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span> <span class="s2">"T_u"</span><span class="p">,</span>
+                                  <span class="n">fuel</span><span class="o">=</span><span class="s2">"CH4"</span><span class="p">,</span> <span class="n">mechanism</span><span class="o">=</span><span class="s2">"gri30.yaml"</span><span class="p">)</span>
+</code></pre></div>
+<p><img alt="" src="part1_files/fig12.png" /></p>
+<p><img alt="" src="part1_files/fig13.png" /></p>
+<p><img alt="" src="part1_files/fig14.png" /></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.highlight", "content.cards", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../javascripts/mathjax.js"></script>
+      
+        <script src="https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
